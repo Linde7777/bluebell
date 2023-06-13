@@ -11,7 +11,7 @@ import (
 func Init() (err error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("settings/config.yaml")
+	viper.AddConfigPath("settings")
 	if err = viper.ReadInConfig(); err != nil {
 		fmt.Println("viper.ReadInConfig() failed: ", err)
 		return
