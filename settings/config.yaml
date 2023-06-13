@@ -14,8 +14,8 @@ mysql:
   user: "root"
   password: "1234"
   dbname: "bluebell"
-  max_conn: 200
-  idle_conn: 50
+  max_conns: 200
+  idle_conns: 50
 redis:
   host: "127.0.0.1"
   port: 6379
