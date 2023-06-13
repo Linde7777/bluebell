@@ -30,7 +30,12 @@ func main() {
 		fmt.Println("fail to init logger: ", err)
 		return
 	}
-	defer zap.L().Sync()
+	defer func(l *zap.Logger) {
+		err := l.Sync()
+		if err != nil {
+			fmt.Println("Fail to sync zap")
+		}
+	}(zap.L())
 
 	if err := mysql.Init(); err != nil {
 		fmt.Println("fail to init mysql: ", err)
