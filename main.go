@@ -27,19 +27,19 @@ func main() {
 	}
 
 	if err := logger.Init(); err != nil {
-		fmt.Println("fail to init setting: ", err)
+		fmt.Println("fail to init logger: ", err)
 		return
 	}
 	defer zap.L().Sync()
 
 	if err := mysql.Init(); err != nil {
-		fmt.Println("fail to init setting: ", err)
+		fmt.Println("fail to init mysql: ", err)
 		return
 	}
 	defer mysql.Close()
 
 	if err := redis.Init(); err != nil {
-		fmt.Println("fail to init setting: ", err)
+		fmt.Println("fail to init redis: ", err)
 		return
 	}
 	defer redis.Close()
