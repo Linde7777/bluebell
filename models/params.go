@@ -7,7 +7,7 @@ type ParamSignUp struct {
 	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
 }
 
-// ParamsLogin store the info that is needed to be login
+// ParamsLogin store the info that is needed to be used in Login
 type ParamsLogin struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
