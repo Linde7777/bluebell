@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"bluebell/controller"
 	"bluebell/logger"
 	"net/http"
 
@@ -13,5 +14,6 @@ func SetUp() (engine *gin.Engine) {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "hello there")
 	})
+	r.POST("/signup", controller.SignUpHandler)
 	return r
 }
