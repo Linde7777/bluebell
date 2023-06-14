@@ -25,7 +25,7 @@ func main() {
 		return
 	}
 
-	if err := logger.Init(settings.Conf.LogConfig); err != nil {
+	if err := logger.Init(settings.Conf.LogConfig, settings.Conf.Mode); err != nil {
 		fmt.Println("fail to init logger: ", err)
 		return
 	}
