@@ -2,10 +2,11 @@ package logic
 
 import (
 	"bluebell/dao/mysql"
+	"bluebell/models"
 	"bluebell/pkg/snowflake"
 )
 
-func SignUp() {
+func SignUp(p *models.ParamSignUp) {
 	// 1. is user exist?
 	mysql.QueryUserByUsername()
 	// 2. generate user id
