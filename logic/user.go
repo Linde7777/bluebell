@@ -29,3 +29,26 @@ func SignUp(p *models.ParamSignUp) (err error) {
 
 	return
 }
+
+func Login(ul *models.UserLogin) (err error) {
+	// 1. read from DB, check if user exist,
+	// if not, return error, if so, check password,
+	// notice that the password is encrypted
+	exist, err := mysql.CheckUserExist(ul.Username)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return errors.New("user does not exist")
+	}
+
+	match, err := mysql.CheckPWDMatching(ul)
+	if err != nil {
+		return err
+	}
+	if !match {
+		return errors.New("password does not match")
+	}
+
+	return
+}
