@@ -42,12 +42,12 @@ func encrypt(password string) string {
 	return hex.EncodeToString(h.Sum([]byte(password)))
 }
 
-func CheckPWDMatching(ul *models.UserLogin) (match bool, err error) {
+func CheckPWDMatching(pl *models.ParamsLogin) (match bool, err error) {
 	sqlStr := "select password from user where username=?"
 	var password string
-	if err = db.Get(&password, sqlStr, ul.Username); err != nil {
+	if err = db.Get(&password, sqlStr, pl.Username); err != nil {
 		return false, err
 	}
 
-	return encrypt(ul.Password) == password, nil
+	return encrypt(pl.Password) == password, nil
 }

@@ -12,8 +12,8 @@ import (
 )
 
 func SignUpHandler(c *gin.Context) {
-	p := new(models.ParamSignUp)
-	if err := c.ShouldBindJSON(p); err != nil {
+	ps := new(models.ParamSignUp)
+	if err := c.ShouldBindJSON(ps); err != nil {
 		msg := "SignUp failed to bind JSON"
 		zap.L().Error(msg, zap.Error(err))
 		c.JSON(http.StatusOK, gin.H{
@@ -22,7 +22,7 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
-	if err := logic.SignUp(p); err != nil {
+	if err := logic.SignUp(ps); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": fmt.Sprintf("fail to signup: " + err.Error()),
 		})
@@ -33,8 +33,8 @@ func SignUpHandler(c *gin.Context) {
 }
 
 func LoginHandler(c *gin.Context) {
-	ul := new(models.UserLogin)
-	if err := c.ShouldBindJSON(ul); err != nil {
+	pl := new(models.ParamsLogin)
+	if err := c.ShouldBindJSON(pl); err != nil {
 		msg := "LoginHandler fail to bind JSON"
 		zap.L().Error(msg, zap.Error(err))
 		c.JSON(http.StatusOK, gin.H{
@@ -43,7 +43,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	if err := logic.Login(ul); err != nil {
+	if err := logic.Login(pl); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": fmt.Sprintf("fail to login: " + err.Error()),
 		})

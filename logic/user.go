@@ -30,11 +30,11 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	return
 }
 
-func Login(ul *models.UserLogin) (err error) {
+func Login(pl *models.ParamsLogin) (err error) {
 	// 1. read from DB, check if user exist,
 	// if not, return error, if so, check password,
 	// notice that the password is encrypted
-	exist, err := mysql.CheckUserExist(ul.Username)
+	exist, err := mysql.CheckUserExist(pl.Username)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func Login(ul *models.UserLogin) (err error) {
 		return errors.New("user does not exist")
 	}
 
-	match, err := mysql.CheckPWDMatching(ul)
+	match, err := mysql.CheckPWDMatching(pl)
 	if err != nil {
 		return err
 	}
