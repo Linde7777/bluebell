@@ -1,5 +1,5 @@
 name: "bluebell"
-mode: "dev"
+mode: "debug"
 port: 9091
 version: "v0.0.1"
 start_time: "2023-01-01"
