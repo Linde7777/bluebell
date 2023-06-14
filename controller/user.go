@@ -17,25 +17,9 @@ func SignUpHandler(c *gin.Context) {
 		msg := "SignUp failed to bind JSON"
 		zap.L().Error(msg, zap.Error(err))
 		c.JSON(http.StatusOK, gin.H{
-			"msg": msg,
+			"msg": err.Error(),
 		})
 		return
-	}
-
-	if len(p.Password) == 0 || len(p.RePassword) == 0 || len(p.Username) == 0 {
-		msg := "SignUp with empty parameters"
-		zap.L().Error(msg)
-		c.JSON(http.StatusOK, gin.H{
-			"msg": msg,
-		})
-	}
-
-	if p.Password != p.RePassword {
-		msg := "Password does not match RePassword"
-		zap.L().Error(msg)
-		c.JSON(http.StatusOK, gin.H{
-			"msg": msg,
-		})
 	}
 
 	// 2. logic
