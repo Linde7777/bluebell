@@ -41,3 +41,13 @@ func encrypt(password string) string {
 	h.Write([]byte(secret))
 	return hex.EncodeToString(h.Sum([]byte(password)))
 }
+
+func CheckPWDMatching(ul *models.UserLogin) (match bool, err error) {
+	sqlStr := "select password from user where username=?"
+	var password string
+	if err = db.Get(&password, sqlStr, ul.Username); err != nil {
+		return false, err
+	}
+
+	return encrypt(ul.Password) == password, nil
+}
