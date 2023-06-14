@@ -53,7 +53,7 @@ func main() {
 		fmt.Println("fail to init snowflake")
 	}
 
-	r := routes.SetUp()
+	r := routes.SetUp(settings.Conf.Mode)
 	err = r.Run(fmt.Sprintf(":%d", settings.Conf.Port))
 	if err != nil {
 		zap.L().Fatal("Fail to run router,", zap.Error(err))
