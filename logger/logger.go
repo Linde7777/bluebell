@@ -20,12 +20,12 @@ import (
 
 var lg *zap.Logger
 
-func Init(cf *settings.LogConfig) (err error) {
+func Init(cfg *settings.LogConfig) (err error) {
 	writeSyncer := getLogWriter(
-		cf.Filename,
-		cf.MaxSize,
-		cf.MaxBackups,
-		cf.MaxAge,
+		cfg.Filename,
+		cfg.MaxSize,
+		cfg.MaxBackups,
+		cfg.MaxAge,
 	)
 	encoder := getEncoder()
 	var l = new(zapcore.Level)
