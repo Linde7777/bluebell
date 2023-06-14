@@ -11,7 +11,6 @@ import (
 )
 
 func SignUpHandler(c *gin.Context) {
-	// 1. get parameters and validate them
 	p := new(models.ParamSignUp)
 	if err := c.ShouldBindJSON(p); err != nil {
 		msg := "SignUp failed to bind JSON"
@@ -22,7 +21,6 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
-	// 2. logic
 	if err := logic.SignUp(p); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "fail to signup",
@@ -30,6 +28,5 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
-	// 3. return
 	c.JSON(http.StatusOK, gin.H{"msg": "sign up success"})
 }
