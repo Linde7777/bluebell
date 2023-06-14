@@ -56,6 +56,11 @@ func main() {
 	}
 
 	r := routes.SetUp()
+	err = r.Run(fmt.Sprintf(":%d", settings.Conf.Port))
+	if err != nil {
+		zap.L().Fatal("Fail to run router,", zap.Error(err))
+		return
+	}
 
 	srv := &http.Server{
 		//Addr:    fmt.Sprintf(":%d", settings.Conf.Port),
