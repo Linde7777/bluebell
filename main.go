@@ -17,8 +17,6 @@ import (
 	"time"
 
 	"go.uber.org/zap"
-
-	"github.com/spf13/viper"
 )
 
 func main() {
@@ -63,8 +61,7 @@ func main() {
 	}
 
 	srv := &http.Server{
-		//Addr:    fmt.Sprintf(":%d", settings.Conf.Port),
-		Addr:    fmt.Sprintf(":%d", viper.GetInt("app.port")),
+		Addr:    fmt.Sprintf(":%d", settings.Conf.Port),
 		Handler: r,
 	}
 
