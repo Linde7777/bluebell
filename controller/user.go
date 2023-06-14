@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell/logic"
 	"bluebell/models"
+	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -23,7 +24,7 @@ func SignUpHandler(c *gin.Context) {
 
 	if err := logic.SignUp(p); err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"msg": "fail to signup",
+			"msg": fmt.Sprintf("fail to signup: " + err.Error()),
 		})
 		return
 	}
@@ -44,7 +45,7 @@ func LoginHandler(c *gin.Context) {
 
 	if err := logic.Login(ul); err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"msg": "fail to login",
+			"msg": fmt.Sprintf("fail to login: " + err.Error()),
 		})
 		return
 	}
