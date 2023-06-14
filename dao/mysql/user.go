@@ -29,8 +29,8 @@ func QueryUserByUsername() {
 
 }
 
-// InsertUser will encrypt the models.User.Password
-func InsertUser(u *models.User) error {
+// InsertUser will encrypt the models.UserInserted.Password
+func InsertUser(u *models.UserInserted) error {
 	u.Password = encrypt(u.Password)
 	// 1. run sql
 	sqlStr := "insert into user(user_id,username,password) values(?,?,?)"

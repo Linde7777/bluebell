@@ -14,7 +14,7 @@ func SignUp(p *models.ParamSignUp) (err error) {
 
 	// 2. generate user id
 	uid := snowflake.GenID()
-	u := &models.User{
+	u := &models.UserInserted{
 		UserID:   uid,
 		Username: p.Username,
 		Password: p.Password,
