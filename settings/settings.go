@@ -1,6 +1,7 @@
 package settings
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/fsnotify/fsnotify"
@@ -60,6 +61,10 @@ func Init() (err error) {
 
 	if err = viper.Unmarshal(Conf); err != nil {
 		fmt.Println("viper.Unmarshal failed: ", err)
+	}
+
+	if Conf.Mode != "debug" && Conf.Mode != "release" {
+		return errors.New("mode should be [debug] or [release]")
 	}
 
 	viper.WatchConfig()
