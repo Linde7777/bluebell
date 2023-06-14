@@ -18,7 +18,6 @@ func CheckUserExist(username string) (exist bool, err error) {
 	}
 
 	return count > 0, nil
-
 }
 
 func QueryUserByUsername() {
