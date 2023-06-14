@@ -4,24 +4,20 @@ import (
 	"bluebell/models"
 	"crypto/md5"
 	"encoding/hex"
-	"errors"
 )
 
 func QueryUserByID() {
 
 }
 
-func CheckUserExist(username string) (err error) {
+func CheckUserExist(username string) (exist bool, err error) {
 	sqlStr := "select count(user_id) from user where username=?"
 	var count int
 	if err = db.Get(&count, sqlStr, username); err != nil {
-		return err
-	}
-	if count > 0 {
-		return errors.New("user is already exists")
+		return false, err
 	}
 
-	return
+	return count > 0, nil
 
 }
 
