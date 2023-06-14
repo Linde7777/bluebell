@@ -6,12 +6,24 @@ import (
 	"bluebell/pkg/snowflake"
 )
 
-func SignUp(p *models.ParamSignUp) {
+func SignUp(p *models.ParamSignUp) (err error) {
 	// 1. is user exist?
-	mysql.QueryUserByUsername()
-	// 2. generate user id
-	snowflake.GenID()
-	// 3. DAO, store user in database
-	mysql.SignUp()
+	if err = mysql.CheckUserExist(p.Username); err != nil {
+		return err
+	}
 
+	// 2. generate user id
+	uid := snowflake.GenID()
+	u := &models.User{
+		UserID:   uid,
+		Username: p.Username,
+		Password: p.Password,
+	}
+
+	// 3. DAO, store user in database
+	if err = mysql.InsertUser(u); err != nil {
+		return err
+	}
+
+	return
 }
