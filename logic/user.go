@@ -7,13 +7,19 @@ import (
 	"errors"
 )
 
+var (
+	ErrUserExist    = errors.New("user is already exist")
+	ErrUserNotExist = errors.New("user does not exist")
+	ErrPwdNotMatch  = errors.New("password does not match")
+)
+
 func SignUp(p *models.ParamSignUp) (err error) {
 	exist, err := mysql.CheckUserExist(p.Username)
 	if err != nil {
 		return err
 	}
 	if exist {
-		return errors.New("user is already exist")
+		return ErrUserExist
 	}
 
 	uid := snowflake.GenID()
@@ -39,7 +45,7 @@ func Login(pl *models.ParamsLogin) (err error) {
 		return err
 	}
 	if !exist {
-		return errors.New("user does not exist")
+		return ErrUserNotExist
 	}
 
 	match, err := mysql.CheckPWDMatching(pl)
@@ -47,7 +53,7 @@ func Login(pl *models.ParamsLogin) (err error) {
 		return err
 	}
 	if !match {
-		return errors.New("password does not match")
+		return ErrPwdNotMatch
 	}
 
 	return
