@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"bluebell/settings"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -20,10 +21,11 @@ import (
 var lg *zap.Logger
 
 func Init() (err error) {
-	writeSyncer := getLogWriter(viper.GetString("log.filename"),
-		viper.GetInt("log.max_size"),
-		viper.GetInt("log.max_backups"),
-		viper.GetInt("log.max_age"),
+	writeSyncer := getLogWriter(
+		settings.Conf.LogConfig.Filename,
+		settings.Conf.LogConfig.MaxSize,
+		settings.Conf.LogConfig.MaxBackups,
+		settings.Conf.LogConfig.MaxAge,
 	)
 	encoder := getEncoder()
 	var l = new(zapcore.Level)
