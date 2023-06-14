@@ -1,7 +1,7 @@
 package models
 
-// UserInserted define the structure of the user,
-// when necessary info need to be inserted in to database
+// UserInserted store the info that is needed
+// to be inserted into database
 type UserInserted struct {
 	UserID   int64  `db:"user_id"`
 	Username string `db:"username"`
