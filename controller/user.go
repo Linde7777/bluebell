@@ -30,3 +30,24 @@ func SignUpHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"msg": "sign up success"})
 }
+
+func LoginHandler(c *gin.Context) {
+	ul := new(models.UserLogin)
+	if err := c.ShouldBindJSON(ul); err != nil {
+		msg := "LoginHandler fail to bind JSON"
+		zap.L().Error(msg, zap.Error(err))
+		c.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+		return
+	}
+
+	if err := logic.Login(ul); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "fail to login",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, "login success")
+}
