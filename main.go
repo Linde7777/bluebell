@@ -27,7 +27,7 @@ func main() {
 		return
 	}
 
-	if err := logger.Init(); err != nil {
+	if err := logger.Init(settings.Conf.LogConfig); err != nil {
 		fmt.Println("fail to init logger: ", err)
 		return
 	}
@@ -38,13 +38,13 @@ func main() {
 		}
 	}(zap.L())
 
-	if err := mysql.Init(); err != nil {
+	if err := mysql.Init(settings.Conf.MySQLConfig); err != nil {
 		fmt.Println("fail to init mysql: ", err)
 		return
 	}
 	defer mysql.Close()
 
-	if err := redis.Init(); err != nil {
+	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
 		fmt.Println("fail to init redis: ", err)
 		return
 	}
@@ -58,6 +58,7 @@ func main() {
 	r := routes.SetUp()
 
 	srv := &http.Server{
+		//Addr:    fmt.Sprintf(":%d", settings.Conf.Port),
 		Addr:    fmt.Sprintf(":%d", viper.GetInt("app.port")),
 		Handler: r,
 	}
