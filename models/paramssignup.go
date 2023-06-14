@@ -1,7 +1,7 @@
 package models
 
-// ParamSignUp define the structure of
-// parameter that is inputted from the client
+// ParamSignUp store the info that is
+// typed by the client
 type ParamSignUp struct {
 	Username   string `json:"username" binding:"required"`
 	Password   string `json:"password" binding:"required"`
