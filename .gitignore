@@ -4,3 +4,5 @@
 /go.mod
 /go.sum
 /.idea/bluebell.iml
+/.idea/sqldialects.xml
+/.idea/dataSources.xml
