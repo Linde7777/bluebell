@@ -14,6 +14,9 @@ func SetUp() (engine *gin.Engine) {
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "hello there")
 	})
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "pong!")
+	})
 	r.POST("/signup", controller.SignUpHandler)
 	return r
 }
