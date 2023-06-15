@@ -1,6 +1,11 @@
 package middlewares
 
-import "bluebell/pkg/jwt"
+import (
+	"bluebell/pkg/jwt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strings"
+)
 
 func JWTAuthMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
