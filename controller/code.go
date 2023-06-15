@@ -3,12 +3,12 @@ package controller
 type ResCode int
 
 const (
-	CodeSuccess      ResCode = 1000
-	CodeInvalidParam ResCode = 1001
-	CodeUserExist    ResCode = 1002
-	CodeUserNotExist ResCode = 1003
-	CodePWDNotMatch  ResCode = 1004
-	CodeServerBusy   ResCode = 1005
+	CodeSuccess ResCode = 1000 + iota
+	CodeInvalidParam
+	CodeUserExist
+	CodeUserNotExist
+	CodePWDNotMatch
+	CodeServerBusy
 )
 
 var codeMsgMap = map[ResCode]string{
