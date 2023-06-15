@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -49,12 +50,8 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 // and AccessToken, which represent in MyClaims, contain
 // jwt.StandardClaims too
 func ParseToken(tokenStr string) (*MyClaims, error) {
-
 	var mc = new(MyClaims)
-	token, err := jwt.ParseWithClaims(tokenStr, mc,
-		func(token *jwt.Token) (interface{}, error) {
-			return secret, nil
-		})
+	token, err := jwt.ParseWithClaims(tokenStr, mc, KeyFunc)
 	if err != nil {
 		return nil, err
 	}
@@ -62,4 +59,28 @@ func ParseToken(tokenStr string) (*MyClaims, error) {
 		return mc, err
 	}
 	return nil, ErrInvalidToken
+}
+
+func RefreshToken(accToken, refToken string) (newAccToken, newRefToken string,
+	err error) {
+	if _, err = jwt.Parse(refToken, KeyFunc); err != nil {
+		return
+	}
+
+	var mc MyClaims
+	_, err = jwt.ParseWithClaims(accToken, &mc, KeyFunc)
+	v, _ := err.(*jwt.ValidationError)
+
+	if v.Errors == jwt.ValidationErrorExpired {
+		return GenToken(mc.UserID, mc.Username)
+	}
+
+	return
+}
+
+func KeyFunc(token *jwt.Token) (interface{}, error) {
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+	}
+	return secret, nil
 }
