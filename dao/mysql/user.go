@@ -50,3 +50,11 @@ func CheckPWDMatching(pl *models.ParamsLogin) (match bool, err error) {
 
 	return encrypt(pl.Password) == password, nil
 }
+
+func GetUserIDByName(username string) (userID int64, err error) {
+	sqlStr := "select user_id from user where username=?"
+	if err = db.Get(&userID, sqlStr, username); err != nil {
+		return -1, err
+	}
+	return userID, nil
+}
