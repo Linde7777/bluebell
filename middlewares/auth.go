@@ -33,9 +33,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			return
 		}
 
-		c.Set(CtxUserIDKey, mc.UserID)
+		c.Set(controller.CtxUserIDKey, mc.UserID)
 		c.Next()
 	}
 }
-
-const CtxUserIDKey = "userID"
