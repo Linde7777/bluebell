@@ -45,8 +45,8 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 	return
 }
 
-// ParseToken can parse both AccessToken and RefreshToken,
-// because RefreshToken is represented in jwt.StandardClaims,
+// ParseToken can parse both accessToken and refreshToken,
+// because refreshToken is represented in jwt.StandardClaims,
 // and AccessToken, which represent in MyClaims, contain
 // jwt.StandardClaims too
 func ParseToken(tokenStr string) (*MyClaims, error) {
@@ -56,9 +56,14 @@ func ParseToken(tokenStr string) (*MyClaims, error) {
 		return nil, err
 	}
 	if token.Valid {
-		return mc, err
+		return mc, nil
 	}
 	return nil, ErrInvalidToken
+}
+
+func IsTimeExpireErr(err error) bool {
+	v, _ := err.(*jwt.ValidationError)
+	return v.Errors == jwt.ValidationErrorExpired
 }
 
 func RefreshToken(accToken, refToken string) (newAccToken, newRefToken string,
