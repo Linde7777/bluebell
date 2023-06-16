@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // CommunityBasicSelected store the community
 // basic info, where come from SQL query
 type CommunityBasicSelected struct {
@@ -10,7 +12,8 @@ type CommunityBasicSelected struct {
 // CommunityDetailSelected store the community
 // detail info, where come from SQL query
 type CommunityDetailSelected struct {
-	ID           int    `json:"id" db:"community_id"`
-	Name         string `json:"name" db:"community_name"`
-	Introduction string `json:"introduction" db:"introduction"`
+	ID           int       `json:"id" db:"community_id"`
+	Name         string    `json:"name" db:"community_name"`
+	Introduction string    `json:"introduction" db:"introduction"`
+	CreateTime   time.Time `json:"create_time" db:"create_time"`
 }
