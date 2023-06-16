@@ -19,9 +19,15 @@ type AppConfig struct {
 	StartTime string `mapstructure:"start_time"`
 	MachineID int64  `mapstructure:"machine_id"`
 
+	*AuthConfig  `mapstructure:"auth"`
 	*LogConfig   `mapstructure:"log"`
 	*MySQLConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
+}
+
+type AuthConfig struct {
+	AccTokenExpDurMinute int `mapstructure:"access_token_expire_duration_minute"`
+	RefTokenExpDurHour   int `mapstructure:"refresh_token_expire_duration_hour"`
 }
 
 type LogConfig struct {
