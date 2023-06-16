@@ -70,3 +70,4 @@
 {"level":"INFO","time":"2023-06-14T19:23:56.139+0800","caller":"logger/logger.go:82","msg":"/login","status":200,"method":"POST","path":"/login","query":"","ip":"127.0.0.1","user-agent":"PostmanRuntime/7.32.2","errors":"","cost":0.0003318}
 {"level":"INFO","time":"2023-06-14T19:24:02.215+0800","caller":"logger/logger.go:82","msg":"/login","status":200,"method":"POST","path":"/login","query":"","ip":"127.0.0.1","user-agent":"PostmanRuntime/7.32.2","errors":"","cost":0.0011724}
 {"level":"INFO","time":"2023-06-15T14:38:27.639+0800","caller":"logger/logger.go:82","msg":"/login","status":200,"method":"POST","path":"/login","query":"","ip":"127.0.0.1","user-agent":"PostmanRuntime/7.32.2","errors":"","cost":0.0010622}
+{"level":"INFO","time":"2023-06-16T14:58:19.183+0800","caller":"logger/logger.go:82","msg":"/api/v1/login","status":200,"method":"POST","path":"/api/v1/login","query":"","ip":"127.0.0.1","user-agent":"PostmanRuntime/7.32.3","errors":"","cost":0.0079113}
