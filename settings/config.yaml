@@ -4,6 +4,9 @@ port: 9091
 version: "v0.0.1"
 start_time: "2023-01-01"
 machine_id: 1
+auth:
+  access_token_expire_duration_minute: 10
+  refresh_token_expire_duration_hour: 7200
 log:
   level: "debug"
   filename: "bluebell.log"
