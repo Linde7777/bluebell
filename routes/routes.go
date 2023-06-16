@@ -9,7 +9,7 @@ import (
 )
 
 func SetUp(mode string) (engine *gin.Engine) {
-	if mode == gin.ReleaseMode {
+	if mode == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
