@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"bluebell/settings"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -8,8 +9,8 @@ import (
 )
 
 var secret = []byte("Red Read Redemption II")
-var AccTokenExpireDuration = time.Minute * 10
-var RefTokenExpireDuration = time.Hour * 24 * 30
+var AccTokenExpireDuration = settings.Conf.AccTokenExpDurInMinute
+var RefTokenExpireDuration = settings.Conf.RefTokenExpDurInHour
 var ErrInvalidToken = errors.New("invalid token")
 
 type MyClaims struct {
@@ -21,8 +22,9 @@ type MyClaims struct {
 func GenToken(userID int64, username string) (accessToken, refreshToken string, err error) {
 	mc := &MyClaims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(AccTokenExpireDuration).Unix(),
-			Issuer:    "bluebell",
+			ExpiresAt: time.Now().Add(
+				time.Duration(AccTokenExpireDuration)).Unix(),
+			Issuer: "bluebell",
 		},
 		UserID:   userID,
 		Username: username,
@@ -34,8 +36,9 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 	}
 
 	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(RefTokenExpireDuration).Unix(),
-		Issuer:    "bluebell",
+		ExpiresAt: time.Now().Add(
+			time.Duration(RefTokenExpireDuration)).Unix(),
+		Issuer: "bluebell",
 	})
 	refreshToken, err = token.SignedString(secret)
 	if err != nil {
