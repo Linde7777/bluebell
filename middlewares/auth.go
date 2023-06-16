@@ -29,12 +29,6 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 		mc, err := jwt.ParseToken(parts[1])
 		//todo dealing with refreshToken
 		// todo specify a code for accessToken expire
-		if jwt.IsTimeExpireErr(err) {
-			controller.ResponseErrorWithMsg(c, controller.CodeInvalidToken,
-				"AccessToken/RefreshToken has expired")
-			c.Abort()
-			return
-		}
 		if err != nil {
 			controller.ResponseError(c, controller.CodeInvalidToken)
 			c.Abort()
