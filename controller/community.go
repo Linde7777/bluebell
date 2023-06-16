@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell/logic"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 // CommunityHandler get all community,
@@ -14,4 +15,19 @@ func CommunityHandler(c *gin.Context) {
 		return
 	}
 	ResponseSuccess(c, communityList)
+}
+
+func CommunityDetailHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	communityDetail, err := logic.GetCommunityDetailList(id)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	ResponseSuccess(c, communityDetail)
 }
