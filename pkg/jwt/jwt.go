@@ -9,8 +9,6 @@ import (
 )
 
 var secret = []byte("Red Read Redemption II")
-var AccTokenExpireDuration = settings.Conf.AccTokenExpDurInMinute
-var RefTokenExpireDuration = settings.Conf.RefTokenExpDurInHour
 var ErrInvalidToken = errors.New("invalid token")
 
 type MyClaims struct {
@@ -20,10 +18,15 @@ type MyClaims struct {
 }
 
 func GenToken(userID int64, username string) (accessToken, refreshToken string, err error) {
+	// do not move the following two lines of code outside of this
+	// function, since before this function was called,
+	// the setting.Conf is empty.
+	var AccTokenExpDur = settings.Conf.AccessTokenExpireDuration
+	var RefTokenExpDur = settings.Conf.RefreshTokenExpireDuration
 	mc := &MyClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(
-				time.Duration(AccTokenExpireDuration)).Unix(),
+				time.Duration(AccTokenExpDur)).Unix(),
 			Issuer: "bluebell",
 		},
 		UserID:   userID,
@@ -37,7 +40,7 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 
 	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(
-			time.Duration(RefTokenExpireDuration)).Unix(),
+			time.Duration(RefTokenExpDur)).Unix(),
 		Issuer: "bluebell",
 	})
 	refreshToken, err = token.SignedString(secret)
