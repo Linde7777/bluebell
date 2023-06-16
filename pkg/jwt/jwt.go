@@ -21,13 +21,14 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 	// do not move the following two lines of code outside of this
 	// function, since before this function was called,
 	// the setting.Conf is empty.
-	var AccTokenExpDur = settings.Conf.AccessTokenExpireDuration
-	var RefTokenExpDur = settings.Conf.RefreshTokenExpireDuration
+	var AccTokenExpDur = time.Duration(
+		settings.Conf.AccessTokenExpireDuration) * time.Second
+	var RefTokenExpDur = time.Duration(
+		settings.Conf.RefreshTokenExpireDuration) * time.Second
 	mc := &MyClaims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(
-				time.Duration(AccTokenExpDur)).Unix(),
-			Issuer: "bluebell",
+			ExpiresAt: time.Now().Add(AccTokenExpDur).Unix(),
+			Issuer:    "bluebell",
 		},
 		UserID:   userID,
 		Username: username,
@@ -39,9 +40,8 @@ func GenToken(userID int64, username string) (accessToken, refreshToken string, 
 	}
 
 	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(
-			time.Duration(RefTokenExpDur)).Unix(),
-		Issuer: "bluebell",
+		ExpiresAt: time.Now().Add(RefTokenExpDur).Unix(),
+		Issuer:    "bluebell",
 	})
 	refreshToken, err = token.SignedString(secret)
 	if err != nil {
