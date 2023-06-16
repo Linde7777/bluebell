@@ -37,29 +37,29 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	return
 }
 
-func Login(pl *models.ParamsLogin) (token string, err error) {
+func Login(pl *models.ParamsLogin) (accToken, refToken string, err error) {
 	// 1. read from DB, check if user exist,
 	// if not, return error, if so, check password,
 	// notice that the password is encrypted
 	exist, err := mysql.CheckUserExist(pl.Username)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	if !exist {
-		return "", ErrUserNotExist
+		return "", "", ErrUserNotExist
 	}
 
 	match, err := mysql.CheckPWDMatching(pl)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	if !match {
-		return "", ErrPwdNotMatch
+		return "", "", ErrPwdNotMatch
 	}
 
 	userID, err := mysql.GetUserIDByName(pl.Username)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	return jwt.GenToken(userID, pl.Username)
