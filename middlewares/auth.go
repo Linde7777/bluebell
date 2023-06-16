@@ -10,7 +10,7 @@ import (
 func JWTAuthMiddleware() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		// Assuming Token is stored at the Authorization in Header:
-		// Authorization: Bearer: xxx.xxx.xxx
+		// Authorization: Bearer xxx.xxx.xxx
 		authHeader := c.Request.Header.Get("Authorization")
 		if authHeader == "" {
 			controller.ResponseError(c, controller.CodeNeedLogin)
@@ -27,6 +27,14 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 
 		// parts[1] is tokenString
 		mc, err := jwt.ParseToken(parts[1])
+		//todo dealing with refreshToken
+		// todo specify a code for accessToken expire
+		if jwt.IsTimeExpireErr(err) {
+			controller.ResponseErrorWithMsg(c, controller.CodeInvalidToken,
+				"AccessToken/RefreshToken has expired")
+			c.Abort()
+			return
+		}
 		if err != nil {
 			controller.ResponseError(c, controller.CodeInvalidToken)
 			c.Abort()
