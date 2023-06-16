@@ -5,6 +5,6 @@ import (
 	"bluebell/models"
 )
 
-func GetCommunityList() (communityList []*models.CommunitySelected, err error) {
+func GetCommunityList() (communityList []*models.CommunityBasicSelected, err error) {
 	return mysql.GetCommunityList()
 }
