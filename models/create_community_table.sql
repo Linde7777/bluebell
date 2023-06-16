@@ -1,3 +1,4 @@
+drop table community;
 create table community
 (
     id             int(11)                                 not null auto_increment,
@@ -14,12 +15,12 @@ create table community
   collate = utf8mb4_general_ci;
 
 insert into community
-values ('1', '1', 'Go', 'Let\'s learn go', '2019-11-11 09:35:16', '2019-11-11 09:39:17');
+values ('1', '1', 'Go', 'Let\'s learn Golang', '2019-11-11 09:35:16', '2019-11-11 09:39:17');
 
 
 insert into community
 values ('2', '2', 'RDR2', 'Red Dead Redemption II is a game developed by Rockstar Games', '2018-10-21 09:35:36',
-        '2019-11-11 10:21:19');
+        '2019-07-15 10:21:19');
 
 insert into community
 values ('3', '3', 'GTA5', 'Grand Theft Auto V is a game developed by Rockstar Games', '2010-8-11 17:35:16',
