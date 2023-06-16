@@ -5,7 +5,6 @@ import (
 	"bluebell/logger"
 	"bluebell/middlewares"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func SetUp(mode string) (engine *gin.Engine) {
@@ -16,14 +15,11 @@ func SetUp(mode string) (engine *gin.Engine) {
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
 	v1 := r.Group("/api/v1")
-	v1.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "hello there")
-	})
 	v1.POST("/signup", controller.SignUpHandler)
 	v1.POST("/login", controller.LoginHandler)
-	v1.GET("/ping", middlewares.JWTAuthMiddleware(), func(c *gin.Context) {
-		c.String(http.StatusOK, "pong!")
-	})
-
+	v1.Use(middlewares.JWTAuthMiddleware())
+	{
+		v1.GET("/community", controller.CommunityHandler)
+	}
 	return r
 }
