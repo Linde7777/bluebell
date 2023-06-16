@@ -24,7 +24,7 @@ func CommunityDetailHandler(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	communityDetail, err := logic.GetCommunityDetailList(id)
+	communityDetail, err := logic.GetCommunityDetail(id)
 	if err != nil {
 		ResponseError(c, CodeInvalidParam)
 		return

@@ -9,8 +9,8 @@ func GetCommunityList() (communityList []*models.CommunityBasicSelected, err err
 	return mysql.GetCommunityList()
 }
 
-func GetCommunityDetailList(id int64) (*models.CommunityDetailSelected, error) {
-	data, rowIsEmpty, err := mysql.GetCommunityDetailList(id)
+func GetCommunityDetail(id int64) (*models.CommunityDetailSelected, error) {
+	data, rowIsEmpty, err := mysql.GetCommunityDetail(id)
 	if rowIsEmpty && err == nil {
 		return nil, nil
 	}
