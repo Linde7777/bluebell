@@ -26,8 +26,8 @@ type AppConfig struct {
 }
 
 type AuthConfig struct {
-	AccTokenExpDurMinute int `mapstructure:"access_token_expire_duration_minute"`
-	RefTokenExpDurHour   int `mapstructure:"refresh_token_expire_duration_hour"`
+	AccTokenExpDurInMinute int `mapstructure:"access_token_expire_duration_minute"`
+	RefTokenExpDurInHour   int `mapstructure:"refresh_token_expire_duration_hour"`
 }
 
 type LogConfig struct {
