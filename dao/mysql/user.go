@@ -6,10 +6,6 @@ import (
 	"encoding/hex"
 )
 
-func QueryUserByID() {
-
-}
-
 func CheckUserExist(username string) (exist bool, err error) {
 	sqlStr := "select count(user_id) from user where username=?"
 	var count int
@@ -18,10 +14,6 @@ func CheckUserExist(username string) (exist bool, err error) {
 	}
 
 	return count > 0, nil
-}
-
-func QueryUserByUsername() {
-
 }
 
 // InsertUser will encrypt the models.UserInserted.Password
@@ -57,4 +49,11 @@ func GetUserIDByName(username string) (userID int64, err error) {
 		return -1, err
 	}
 	return userID, nil
+}
+
+func GetUserByID(userID int64) (*models.UserInserted, error) {
+	u := new(models.UserInserted)
+	sqlStr := "select user_id,username from user where user_id=?"
+	err := db.Get(u, sqlStr, userID)
+	return u, err
 }
