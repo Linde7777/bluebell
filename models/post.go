@@ -2,9 +2,9 @@ package models
 
 import "time"
 
-// PostCreated store the info that is needed
+// Post store the info that is needed
 // to create a post
-type PostCreated struct {
+type Post struct {
 	ID          int64     `json:"id" db:"post_id"`
 	AuthorID    int64     `json:"author_id" db:"author_id"`
 	CommunityID int64     `json:"community_id" db:"community_id binding:"required"`
