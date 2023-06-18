@@ -43,7 +43,7 @@ func GetPostDetailHandler(c *gin.Context) {
 	data, err := logic.GetPostDetailByID(id)
 	if err != nil {
 		zap.L().Error("logic.GetPostDetailByID: ", zap.Error(err))
-		ResponseErrorWithMsg(c, CodeServerBusy, err.Error())
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 
