@@ -4,6 +4,7 @@ import (
 	"bluebell/logic"
 	"bluebell/models"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"strconv"
 )
 
@@ -34,12 +35,14 @@ func GetPostDetailHandler(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
-		ResponseErrorWithMsg(c, CodeInvalidParam, err.Error())
+		zap.L().Error("GetPostDetailHandler: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
 		return
 	}
 
 	data, err := logic.GetPostDetailByID(id)
 	if err != nil {
+		zap.L().Error("logic.GetPostDetailByID: ", zap.Error(err))
 		ResponseErrorWithMsg(c, CodeServerBusy, err.Error())
 		return
 	}
