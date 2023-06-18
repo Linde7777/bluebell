@@ -13,3 +13,11 @@ type Post struct {
 	Content     string    `json:"content" db:"content" binding:"required"`
 	CreateTime  time.Time `json:"create_time" db:"create_time"`
 }
+
+// ApiPostDetail provide the api for frontend,
+// store the detail info of a post
+type ApiPostDetail struct {
+	AuthorName string `json:"author_name"`
+	*Post
+	*CommunityDetailSelected
+}
