@@ -49,3 +49,17 @@ func GetPostDetailHandler(c *gin.Context) {
 
 	ResponseSuccess(c, data)
 }
+
+func GetPostDetailListHandler(c *gin.Context) {
+	// get params
+
+	// put params into logic
+	data, err := logic.GetPostDetailList()
+	if err != nil {
+		zap.L().Error("logic.GetPostDetailList: ", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	ResponseSuccess(c, data)
+}
