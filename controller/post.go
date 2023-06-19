@@ -50,9 +50,18 @@ func GetPostDetailHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
+// GetPostDetailListHandler will return a list of posts details,
+// if param "page" is empty, the page will be set to 1
+// if param size is empty, the size will be set to 2
 func GetPostDetailListHandler(c *gin.Context) {
 	targetPageNumberStr := c.Query("page")
 	pageSizeStr := c.Query("size")
+	if targetPageNumberStr == "" {
+		targetPageNumberStr = "1"
+	}
+	if pageSizeStr == "" {
+		pageSizeStr = "2"
+	}
 
 	var targetPageNumber int64
 	targetPageNumber, err := strconv.ParseInt(targetPageNumberStr, 10, 64)
