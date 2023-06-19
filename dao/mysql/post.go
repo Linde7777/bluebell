@@ -19,10 +19,15 @@ func GetPostDetailByID(id int64) (*models.Post, error) {
 	return p, err
 }
 
-func GetPostDetailList() (postList []*models.Post, err error) {
+func GetPostDetailList(targetPageNumber, pageSize int64) (postList []*models.Post, err error) {
 	sqlStr := "select post_id,title,content,author_id," +
-		"community_id,create_time from post limit 2"
+		"community_id,create_time from post limit ?,?"
 	postList = make([]*models.Post, 0, 2)
-	err = db.Select(&postList, sqlStr)
+
+	// in frontend, the initial page number is 1,
+	// in database, the index of post start at 0,
+	// that's why I write (targetPageNumber-1)*pageSize
+	err = db.Select(&postList, sqlStr, (targetPageNumber-1)*pageSize,
+		pageSize)
 	return
 }
