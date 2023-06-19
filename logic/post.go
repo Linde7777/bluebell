@@ -36,9 +36,10 @@ func GetPostDetailByID(id int64) (*models.ApiPostDetail, error) {
 	return apd, err
 }
 
-// GetPostDetailList return a list of length 2
-func GetPostDetailList() (postDetailList []*models.ApiPostDetail, err error) {
-	postList, err := mysql.GetPostDetailList()
+// GetPostDetailList return a list of posts,
+// start at targetPageNumber, with length pageSize
+func GetPostDetailList(targetPageNumber, pageSize int64) (postDetailList []*models.ApiPostDetail, err error) {
+	postList, err := mysql.GetPostDetailList(targetPageNumber, pageSize)
 	if err != nil {
 		return nil, err
 	}
