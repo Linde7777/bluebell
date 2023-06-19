@@ -4,6 +4,7 @@ import (
 	"bluebell/dao/mysql"
 	"bluebell/models"
 	"bluebell/pkg/snowflake"
+	"go.uber.org/zap"
 )
 
 func CreatePost(pc *models.Post) error {
