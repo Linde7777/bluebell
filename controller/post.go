@@ -51,10 +51,26 @@ func GetPostDetailHandler(c *gin.Context) {
 }
 
 func GetPostDetailListHandler(c *gin.Context) {
-	// get params
+	targetPageNumberStr := c.Query("page")
+	pageSizeStr := c.Query("size")
 
-	// put params into logic
-	data, err := logic.GetPostDetailList()
+	var targetPageNumber int64
+	targetPageNumber, err := strconv.ParseInt(targetPageNumberStr, 10, 64)
+	if err != nil {
+		zap.L().Error("strconv.ParseInt: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	var pageSize int64
+	pageSize, err = strconv.ParseInt(pageSizeStr, 10, 64)
+	if err != nil {
+		zap.L().Error("strconv.ParseInt: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	data, err := logic.GetPostDetailList(targetPageNumber, pageSize)
 	if err != nil {
 		zap.L().Error("logic.GetPostDetailList: ", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
