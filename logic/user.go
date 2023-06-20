@@ -43,24 +43,34 @@ func Login(pl *models.ParamsLogin) (user *models.User, err error) {
 	// notice that the password is encrypted
 	exist, err := mysql.CheckUserExist(pl.Username)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 	if !exist {
-		return "", "", ErrUserNotExist
+		return nil, ErrUserNotExist
 	}
 
 	match, err := mysql.CheckPWDMatching(pl)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 	if !match {
-		return "", "", ErrPwdNotMatch
+		return nil, ErrPwdNotMatch
 	}
 
 	userID, err := mysql.GetUserIDByName(pl.Username)
 	if err != nil {
-		return "", "", err
+		return nil, err
 	}
 
-	return jwt.GenToken(userID, pl.Username)
+	accToken, refToken, err := jwt.GenToken(userID, pl.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	user = new(models.User)
+	user.UserID = userID
+	user.Username = pl.Username
+	user.AccessToken = accToken
+	user.RefreshToken = refToken
+	return
 }
