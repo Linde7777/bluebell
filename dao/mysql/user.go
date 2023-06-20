@@ -16,8 +16,8 @@ func CheckUserExist(username string) (exist bool, err error) {
 	return count > 0, nil
 }
 
-// InsertUser will encrypt the models.UserInserted.Password
-func InsertUser(u *models.UserInserted) error {
+// InsertUser will encrypt the models.User.Password
+func InsertUser(u *models.User) error {
 	u.Password = encrypt(u.Password)
 	// 1. run sql
 	sqlStr := "insert into user(user_id,username,password) values(?,?,?)"
@@ -51,8 +51,8 @@ func GetUserIDByName(username string) (userID int64, err error) {
 	return userID, nil
 }
 
-func GetUserByID(userID int64) (*models.UserInserted, error) {
-	u := new(models.UserInserted)
+func GetUserByID(userID int64) (*models.User, error) {
+	u := new(models.User)
 	sqlStr := "select user_id,username from user where user_id=?"
 	err := db.Get(u, sqlStr, userID)
 	return u, err

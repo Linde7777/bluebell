@@ -24,7 +24,7 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	}
 
 	uid := snowflake.GenID()
-	u := &models.UserInserted{
+	u := &models.User{
 		UserID:   uid,
 		Username: p.Username,
 		Password: p.Password,
@@ -37,7 +37,7 @@ func SignUp(p *models.ParamSignUp) (err error) {
 	return
 }
 
-func Login(pl *models.ParamsLogin) (accToken, refToken string, err error) {
+func Login(pl *models.ParamsLogin) (user *models.User, err error) {
 	// 1. read from DB, check if user exist,
 	// if not, return error, if so, check password,
 	// notice that the password is encrypted
