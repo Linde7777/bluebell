@@ -96,6 +96,14 @@ func PostVoteController(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	logic.PostVote()
+
+	userID, err := getCurrentUser(c)
+	if err != nil {
+		zap.L().Error("getCurrentUser: ", err)
+		ResponseError(c, CodeNeedLogin)
+		return
+	}
+
+	logic.VoteForPost(userID, p)
 	ResponseSuccess(c, nil)
 }
