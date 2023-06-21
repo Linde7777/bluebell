@@ -3,6 +3,7 @@ package controller
 import (
 	"bluebell/logic"
 	"bluebell/models"
+	"fmt"
 	"go.uber.org/zap"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +42,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	ResponseSuccess(c, gin.H{
-		"user_id":       user.UserID,
+		"user_id":       fmt.Sprintf("%d", user.UserID),
 		"username":      user.Username,
 		"access_token":  user.AccessToken,
 		"refresh_token": user.RefreshToken,
