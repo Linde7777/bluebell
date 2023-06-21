@@ -88,3 +88,14 @@ func GetPostDetailListHandler(c *gin.Context) {
 
 	ResponseSuccess(c, data)
 }
+
+func PostVoteController(c *gin.Context) {
+	p := new(models.ParamsVoteData)
+	if err := c.ShouldBindJSON(p); err != nil {
+		zap.L().Error("ShouldBindJSON: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	logic.PostVote()
+	ResponseSuccess(c, nil)
+}
