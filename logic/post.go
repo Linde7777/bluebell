@@ -69,3 +69,27 @@ func GetPostDetailList(targetPageNumber, pageSize int64) (postDetailList []*mode
 
 	return
 }
+
+/*
+When a user upvotes a post (direction is 1):
+The user hasn't voted before and is now upvoting the post.
+The user previously downvoted the post and is now upvoting it instead.
+
+When a user doesn't vote (direction is 0):
+The user previously upvoted the post and is now cancelling their vote.
+The user previously downvoted the post and is now cancelling their vote.
+
+When a user downvotes a post (direction is -1):
+The user hasn't voted before and is now downvoting the post.
+The user previously upvoted the post and is now downvoting it instead.
+
+Voting restrictions:
+Users are allowed to vote on each post within one week of its publication.
+After one week, no further votes are allowed.
+
+After the deadline, move the data of voting in redis to mysql,
+and delete the KeyPostVotedPrefix key in redis
+*/
+
+func VoteForPost(userID int64, p *models.ParamsVoteData) {
+}
