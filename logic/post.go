@@ -91,5 +91,11 @@ After the deadline, move the data of voting in redis to mysql,
 and delete the KeyPostVotedPrefix key in redis
 */
 
-func VoteForPost(userID int64, p *models.ParamsVoteData) {
+func VoteForPost(userID int64, p *models.ParamsVoteData) error {
+	zap.L().Debug("VoteForPost: ",
+		zap.Int64("userID", userID),
+		zap.String("postID", p.PostID),
+		zap.Int8("direction", p.Direction))
+	return redis.VoteForPost(strconv.Itoa(int(userID)),
+		p.PostID, float64(p.Direction))
 }
