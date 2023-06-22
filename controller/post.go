@@ -104,6 +104,10 @@ func PostVoteController(c *gin.Context) {
 		return
 	}
 
-	logic.VoteForPost(userID, p)
+	if err := logic.VoteForPost(userID, p); err != nil {
+		zap.L().Error("logic.VoteForPost: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
 	ResponseSuccess(c, nil)
 }
