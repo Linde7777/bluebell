@@ -2,9 +2,11 @@ package logic
 
 import (
 	"bluebell/dao/mysql"
+	"bluebell/dao/redis"
 	"bluebell/models"
 	"bluebell/pkg/snowflake"
 	"go.uber.org/zap"
+	"strconv"
 )
 
 func CreatePost(pc *models.Post) error {
