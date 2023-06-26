@@ -38,7 +38,7 @@ func GetPostDetailList(targetPageNumber, pageSize int64) (postList []*models.Pos
 
 func GetPostDetailListByIDs(IDs []string) (postList []*models.Post, err error) {
 	sqlStr := "select post_id,title,content,author_id," +
-		"community_id,create_time from post where id in (?) " +
+		"community_id,create_time from post where post_id in (?) " +
 		"order by FIND_IN_SET(post_id,?)"
 	query, args, err := sqlx.In(sqlStr, IDs, strings.Join(IDs, ","))
 	if err != nil {
