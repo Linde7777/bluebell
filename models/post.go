@@ -22,3 +22,8 @@ type ApiPostDetail struct {
 	*Post
 	*CommunityDetailSelected
 }
+
+const (
+	OrderTime  = "time"
+	OrderScore = "score"
+)
