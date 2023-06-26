@@ -111,3 +111,34 @@ func PostVoteController(c *gin.Context) {
 	}
 	ResponseSuccess(c, nil)
 }
+
+// GetPostDetailList2 is a updated version,
+// return posts list by time or by scores.
+// Example Usage:
+// api/v1/posts2?page=1&size=2&order=time
+// api/v1/posts2?page=1&size=2&order=scores
+func GetPostDetailList2(c *gin.Context) {
+	p := &models.ParamsPostList{
+		Page:  1,
+		Size:  10,
+		Order: models.OrderTime,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	if p.Order != models.OrderTime && p.Order != models.OrderScore {
+		zap.L().Error("order should be `time` or `score`")
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	postList, err := logic.GetPostDetailList2(p)
+	if err != nil {
+		zap.L().Error("logic.GetPostDetailList2: ", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, postList)
+}
