@@ -65,3 +65,22 @@ func VoteForPost(userID, postID string, currDirection float64) error {
 
 	return err
 }
+
+func GetPostVotingData(IDs []string) (data []int64, err error) {
+	pipeline := rdb.Pipeline()
+	for _, id := range IDs {
+		key := getRedisKey(KeyPostVotedZSetPrefix + id)
+		pipeline.ZCount(key, "1", "1")
+	}
+	cmders, err := pipeline.Exec()
+	if err != nil {
+		return nil, err
+	}
+
+	data = make([]int64, 0, len(cmders))
+	for _, cmder := range cmders {
+		v := cmder.(*redis.IntCmd).Val()
+		data = append(data, v)
+	}
+	return
+}
