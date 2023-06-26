@@ -12,6 +12,17 @@ const scorePerVote = 432
 
 var ErrVoteTimeExpire = errors.New("the voting time has expired")
 
+func CreatePost(postID int64) error {
+	_, err := rdb.ZAdd(getRedisKey(KeyPostTimeZSet), redis.Z{
+		Score:  float64(time.Now().Unix()),
+		Member: postID,
+	}).Result()
+	return err
+}
+
+// VoteForPost takes an argument `value` which is the
+// `direction` in `models.ParamVoteData`,
+// 1 for upvoting, -1 for downvoting, 0 for canceling the vote,
 func VoteForPost(userID, postID string, value float64) error {
 	postTime := rdb.ZScore(getRedisKey(KeyPostTimeZSet), postID).Val()
 	if float64(time.Now().Unix())-postTime > oneWeekInSeconds {
