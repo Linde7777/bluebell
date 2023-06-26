@@ -29,7 +29,8 @@ func VoteForPost(userID, postID string, value float64) error {
 		return ErrVoteTimeExpire
 	}
 
-	oldValue := rdb.ZScore(getRedisKey(KeyPostVotedZSetPrefix+postID), userID).Val()
+	oldValue := rdb.ZScore(getRedisKey(
+		KeyPostVotedZSetPrefix+postID), userID).Val()
 	var direction float64
 	if value > oldValue {
 		direction = 1
@@ -37,21 +38,22 @@ func VoteForPost(userID, postID string, value float64) error {
 		direction = -1
 	}
 	diff := math.Abs(oldValue - value)
-	_, err := rdb.ZIncrBy(getRedisKey(KeyPostScoreZSet), direction*diff*scorePerVote, postID).Result()
+	_, err := rdb.ZIncrBy(getRedisKey(KeyPostScoreZSet),
+		direction*diff*scorePerVote, postID).Result()
 	if err != nil {
 		return err
 	}
 
 	if value != 0 {
-		_, err = rdb.ZAdd(getRedisKey(KeyPostVotedZSetPrefix+postID), redis.Z{
-			Score:  value,
-			Member: userID,
-		}).Result()
+		_, err = rdb.ZAdd(getRedisKey(
+			KeyPostVotedZSetPrefix+postID), redis.Z{
+			Score: value, Member: userID}).Result()
 		if err != nil {
 			return err
 		}
 	} else {
-		_, err = rdb.ZRem(getRedisKey(KeyPostVotedZSetPrefix+postID), postID).Result()
+		_, err = rdb.ZRem(getRedisKey(
+			KeyPostVotedZSetPrefix+postID), userID).Result()
 		if err != nil {
 			return err
 		}
