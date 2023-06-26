@@ -26,6 +26,7 @@ func SetUp(mode string) (engine *gin.Engine) {
 		v1.GET("/posts", controller.GetPostDetailListHandler)
 		v1.GET("/posts2", controller.GetPostDetailListHandler2)
 		v1.POST("/vote", controller.PostVoteController)
+		v1.GET("/community_post", controller.GetCommunityPostListHandler)
 	}
 	return r
 }
