@@ -17,6 +17,11 @@ const (
 	// stored the mapping user_id <-> voting
 	// under a post which id is 123456
 	KeyPostVotedZSetPrefix = "post:voted:"
+
+	// KeyCommunityPostSetPrefix act literally as its naming.
+	// For example: a set named community:56789 store
+	// all the posts in the community which id is 56789
+	KeyCommunityPostSetPrefix = "community:"
 )
 
 func getRedisKey(key string) string {
