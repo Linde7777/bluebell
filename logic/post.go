@@ -108,7 +108,9 @@ func VoteForPost(userID int64, p *models.ParamsVoteData) error {
 		p.PostID, float64(p.Direction))
 }
 
-func GetPostDetailList2(p *models.ParamsPostList) (postDetailList []*models.ApiPostDetail, err error) {
+func GetPostDetailList2(p *models.ParamsPostList) (
+	postDetailList []*models.ApiPostDetail, err error) {
+
 	IDs, err := redis.GetPostIDsInOrder(p)
 	if err != nil {
 		return nil, err
