@@ -119,8 +119,13 @@ func GetPostDetailList2(p *models.ParamsPostList) (postDetailList []*models.ApiP
 		return nil, err
 	}
 
+	votingData, err := redis.GetPostVotingData(IDs)
+	if err != nil {
+		return nil, err
+	}
+
 	postDetailList = make([]*models.ApiPostDetail, 0, len(postList))
-	for _, post := range postList {
+	for idx, post := range postList {
 		userData, err := mysql.GetUserByID(post.AuthorID)
 		if err != nil {
 			zap.L().Error("mysql.GetUserByID: ", zap.Error(err))
@@ -137,6 +142,7 @@ func GetPostDetailList2(p *models.ParamsPostList) (postDetailList []*models.ApiP
 		apd.CommunityDetailSelected = communityData
 		apd.Post = post
 		apd.AuthorName = userData.Username
+		apd.VoteCount = votingData[idx]
 
 		postDetailList = append(postDetailList, apd)
 	}
