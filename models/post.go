@@ -19,6 +19,7 @@ type Post struct {
 // store the detail info of a post
 type ApiPostDetail struct {
 	AuthorName string `json:"author_name"`
+	VoteCount  int64  `json:"vote_count"`
 	*Post
 	*CommunityDetailSelected
 }
