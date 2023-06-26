@@ -23,9 +23,8 @@ type ParamsVoteData struct {
 	Direction int8 `json:"direction,string" binding:"required,oneof=1 0 -1"`
 }
 
-// ParamsPostList store the data that is
-// passed by query string, which will be used
-// in controller.GetPostDetailList2
+// ParamsPostList stored the info that
+// is needed to get posts
 type ParamsPostList struct {
 	Page  int64  `json:"page" form:"page"`
 	Size  int64  `json:"size" form:"size"`
