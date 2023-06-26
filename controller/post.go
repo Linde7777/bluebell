@@ -22,7 +22,7 @@ func CreatePostHandler(c *gin.Context) {
 	}
 	pc.AuthorID = userID
 
-	if err := logic.CreatePost(pc); err != nil {
+	if err = logic.CreatePost(pc); err != nil {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
@@ -104,7 +104,7 @@ func PostVoteController(c *gin.Context) {
 		return
 	}
 
-	if err := logic.VoteForPost(userID, p); err != nil {
+	if err = logic.VoteForPost(userID, p); err != nil {
 		zap.L().Error("logic.VoteForPost: ", zap.Error(err))
 		ResponseError(c, CodeInvalidParam)
 		return
