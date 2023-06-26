@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"bluebell/models"
 	"errors"
 	"github.com/gin-gonic/gin"
 )
