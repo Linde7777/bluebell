@@ -23,3 +23,11 @@ func getCurrentUser(c *gin.Context) (userID int64, err error) {
 
 	return
 }
+
+func validateOrderStr(c *gin.Context, orderStr string) bool {
+	if orderStr == models.OrderTime || orderStr == models.OrderScore {
+		return true
+	}
+
+	return false
+}

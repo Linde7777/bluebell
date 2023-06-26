@@ -128,7 +128,8 @@ func GetPostDetailListHandler2(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	if p.Order != models.OrderTime && p.Order != models.OrderScore {
+
+	if !validateOrderStr(c, p.Order) {
 		zap.L().Error("order should be `time` or `score`")
 		ResponseError(c, CodeInvalidParam)
 		return
@@ -136,7 +137,7 @@ func GetPostDetailListHandler2(c *gin.Context) {
 
 	postList, err := logic.GetPostDetailList2(p)
 	if err != nil {
-		zap.L().Error("logic.GetPostDetailListHandler2: ", zap.Error(err))
+		zap.L().Error("logic.GetPostDetailList2: ", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
