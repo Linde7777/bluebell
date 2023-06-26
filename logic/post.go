@@ -107,3 +107,39 @@ func VoteForPost(userID int64, p *models.ParamsVoteData) error {
 	return redis.VoteForPost(strconv.Itoa(int(userID)),
 		p.PostID, float64(p.Direction))
 }
+
+func GetPostDetailList2(p *models.ParamsPostList) (postDetailList []*models.ApiPostDetail, err error) {
+	IDs, err := redis.GetPostIDsInOrder(p)
+	if err != nil {
+		return nil, err
+	}
+
+	postList, err := mysql.GetPostDetailListByIDs(IDs)
+	if err != nil {
+		return nil, err
+	}
+
+	postDetailList = make([]*models.ApiPostDetail, 0, len(postList))
+	for _, post := range postList {
+		userData, err := mysql.GetUserByID(post.AuthorID)
+		if err != nil {
+			zap.L().Error("mysql.GetUserByID: ", zap.Error(err))
+			continue
+		}
+
+		communityData, rowIsEmpty, err := mysql.GetCommunityDetail(post.CommunityID)
+		if rowIsEmpty && err == nil {
+			zap.L().Error("mysql.GetCommunityDetail: ", zap.Error(err))
+			continue
+		}
+
+		apd := new(models.ApiPostDetail)
+		apd.CommunityDetailSelected = communityData
+		apd.Post = post
+		apd.AuthorName = userData.Username
+
+		postDetailList = append(postDetailList, apd)
+	}
+
+	return
+}
