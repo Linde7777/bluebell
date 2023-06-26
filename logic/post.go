@@ -9,9 +9,15 @@ import (
 	"strconv"
 )
 
-func CreatePost(pc *models.Post) error {
-	pc.ID = snowflake.GenID()
-	return mysql.InsertPost(pc)
+func CreatePost(p *models.Post) error {
+	p.ID = snowflake.GenID()
+	if err := mysql.InsertPost(p); err != nil {
+		return err
+	}
+	if err := redis.CreatePost(p.ID); err != nil {
+		return err
+	}
+	return nil
 }
 
 func GetPostDetailByID(id int64) (*models.ApiPostDetail, error) {
