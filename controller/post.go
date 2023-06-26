@@ -143,3 +143,45 @@ func GetPostDetailListHandler2(c *gin.Context) {
 	}
 	ResponseSuccess(c, postList)
 }
+
+// GetCommunityPostListHandler is similar to GetPostDetailListHandler2
+func GetCommunityPostListHandler(c *gin.Context) {
+	p := &models.ParamsCommunityPostList{
+		ParamsPostList: models.ParamsPostList{
+			Page:  1,
+			Size:  10,
+			Order: models.OrderTime,
+		},
+		CommunityID: 0,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	if !validateOrderStr(c, p.Order) {
+		zap.L().Error("order should be `time` or `score`")
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	if p.Order != models.OrderTime && p.Order != models.OrderScore {
+		zap.L().Error("order should be `time` or `score`")
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	postList, err := logic.GetCommunityPostList(p)
+	if err != nil {
+		zap.L().Error("logic.GetCommunityPostList: ", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, postList)
+}
