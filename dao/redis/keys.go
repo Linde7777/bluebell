@@ -4,7 +4,7 @@ const (
 	Prefix                 = "bluebell:"
 	KeyPostTimeZSet        = "post:time"
 	KeyPostScoreZSet       = "post:score"
-	KeyPostVotedZSetPrefix = "post:voted"
+	KeyPostVotedZSetPrefix = "post:voted:"
 )
 
 func getRedisKey(key string) string {
