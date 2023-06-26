@@ -1,6 +1,10 @@
 package mysql
 
-import "bluebell/models"
+import (
+	"bluebell/models"
+	"github.com/jmoiron/sqlx"
+	"strings"
+)
 
 func InsertPost(pc *models.Post) error {
 	// sorry for the following long text, if I spilt it,
@@ -29,5 +33,19 @@ func GetPostDetailList(targetPageNumber, pageSize int64) (postList []*models.Pos
 	// that's why I write (targetPageNumber-1)*pageSize
 	err = db.Select(&postList, sqlStr, (targetPageNumber-1)*pageSize,
 		pageSize)
+	return
+}
+
+func GetPostDetailListByIDs(IDs []string) (postList []*models.Post, err error) {
+	sqlStr := "select post_id,title,content,author_id," +
+		"community_id,create_time from post where id in (?) " +
+		"order by FIND_IN_SET(post_id,?)"
+	query, args, err := sqlx.In(sqlStr, IDs, strings.Join(IDs, ","))
+	if err != nil {
+		return nil, err
+	}
+
+	query = db.Rebind(query)
+	err = db.Select(&postList, query, args...)
 	return
 }
