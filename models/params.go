@@ -30,3 +30,8 @@ type ParamsPostList struct {
 	Size  int64  `json:"size" form:"size"`
 	Order string `json:"order" form:"order"`
 }
+
+type ParamsCommunityPostList struct {
+	ParamsPostList
+	CommunityID int64 `json:"community_id" form:"community_id"`
+}
