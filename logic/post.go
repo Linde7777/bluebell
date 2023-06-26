@@ -14,7 +14,7 @@ func CreatePost(p *models.Post) error {
 	if err := mysql.InsertPost(p); err != nil {
 		return err
 	}
-	if err := redis.CreatePost(p.ID); err != nil {
+	if err := redis.CreatePost(p.ID, p.CommunityID); err != nil {
 		return err
 	}
 	return nil

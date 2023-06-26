@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/go-redis/redis"
 	"math"
+	"strconv"
 	"time"
 )
 
@@ -13,11 +14,21 @@ const scorePerVote = 432
 var ErrVoteTimeExpire = errors.New("the voting time has expired")
 var ErrRepeatVoting = errors.New("repeating voting")
 
-func CreatePost(postID int64) error {
-	_, err := rdb.ZAdd(getRedisKey(KeyPostTimeZSet), redis.Z{
+func CreatePost(postID, communityID int64) error {
+	pipeline := rdb.TxPipeline()
+	pipeline.ZAdd(getRedisKey(KeyPostTimeZSet), redis.Z{
 		Score:  float64(time.Now().Unix()),
 		Member: postID,
-	}).Result()
+	})
+	pipeline.ZAdd(getRedisKey(KeyPostScoreZSet), redis.Z{
+		Score:  float64(time.Now().Unix()),
+		Member: postID,
+	})
+
+	communityIDStr := strconv.Itoa(int(communityID))
+	pipeline.SAdd(getRedisKey(KeyCommunityPostSetPrefix + communityIDStr))
+
+	_, err := pipeline.Exec()
 	return err
 }
 
