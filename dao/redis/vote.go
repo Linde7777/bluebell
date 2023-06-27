@@ -26,7 +26,7 @@ func CreatePost(postID, communityID int64) error {
 	})
 
 	communityIDStr := strconv.Itoa(int(communityID))
-	pipeline.SAdd(getRedisKey(KeyCommunityPostSetPrefix + communityIDStr))
+	pipeline.SAdd(getRedisKey(KeyCommunityPostSetPrefix+communityIDStr), postID)
 
 	_, err := pipeline.Exec()
 	return err
