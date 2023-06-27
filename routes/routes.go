@@ -5,6 +5,7 @@ import (
 	"bluebell/logger"
 	"bluebell/middlewares"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func SetUp(mode string) (engine *gin.Engine) {
@@ -12,7 +13,8 @@ func SetUp(mode string) (engine *gin.Engine) {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
-	r.Use(logger.GinLogger(), logger.GinRecovery(true))
+	r.Use(logger.GinLogger(), logger.GinRecovery(true),
+		middlewares.RateLimitMiddleware(2*time.Second, 1))
 
 	v1 := r.Group("/api/v1")
 	v1.POST("/signup", controller.SignUpHandler)
