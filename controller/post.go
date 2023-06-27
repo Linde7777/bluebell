@@ -129,12 +129,6 @@ func GetPostDetailListHandler2(c *gin.Context) {
 		return
 	}
 
-	if !validateOrderStr(c, p.Order) {
-		zap.L().Error("order should be `time` or `score`")
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
 	postList, err := logic.GetPostDetailList2(p)
 	if err != nil {
 		zap.L().Error("logic.GetPostDetailList2: ", zap.Error(err))
@@ -156,23 +150,6 @@ func GetCommunityPostListHandler(c *gin.Context) {
 	}
 	if err := c.ShouldBindQuery(p); err != nil {
 		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
-	if !validateOrderStr(c, p.Order) {
-		zap.L().Error("order should be `time` or `score`")
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
-	if err := c.ShouldBindQuery(p); err != nil {
-		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-	if p.Order != models.OrderTime && p.Order != models.OrderScore {
-		zap.L().Error("order should be `time` or `score`")
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
