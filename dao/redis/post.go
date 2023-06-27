@@ -24,14 +24,19 @@ func GetPostIDsInOrder(p *models.ParamsPostList) ([]string, error) {
 func GetCommunityPostIDsInOrder(
 	p *models.ParamsCommunityPostList) ([]string, error) {
 
+	orderKey := getRedisKey(KeyPostTimeZSet)
+	if p.Order == models.OrderScore {
+		orderKey = getRedisKey(KeyPostScoreZSet)
+	}
+
 	communityIDStr := strconv.Itoa(int(p.CommunityID))
 	communityKey := getRedisKey(KeyCommunityPostSetPrefix + communityIDStr)
-	cacheKey := p.Order + communityIDStr
+	cacheKey := orderKey + communityIDStr
 	if rdb.Exists(cacheKey).Val() < 1 {
-		pipeline := redis.Pipeline{}
+		pipeline := rdb.Pipeline()
 		pipeline.ZInterStore(cacheKey, redis.ZStore{
 			Aggregate: "MAX",
-		}, communityKey, p.Order)
+		}, communityKey, orderKey)
 		pipeline.Expire(cacheKey, 60*time.Second)
 		if _, err := pipeline.Exec(); err != nil {
 			return nil, err
