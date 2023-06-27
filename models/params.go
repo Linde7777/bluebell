@@ -28,7 +28,7 @@ type ParamsVoteData struct {
 type ParamsPostList struct {
 	Page  int64  `json:"page" form:"page"`
 	Size  int64  `json:"size" form:"size"`
-	Order string `json:"order" form:"order"`
+	Order string `json:"order" form:"order" binding:"oneof=time score"`
 }
 
 type ParamsCommunityPostList struct {
