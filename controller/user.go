@@ -23,7 +23,7 @@ func SignUpHandler(c *gin.Context) {
 		return
 	}
 
-	ResponseSuccess(c, "sign up success")
+	ResponseSuccess(c, nil)
 }
 
 func LoginHandler(c *gin.Context) {
