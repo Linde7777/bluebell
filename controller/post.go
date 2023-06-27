@@ -5,12 +5,11 @@ import (
 	"bluebell/models"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"strconv"
 )
 
 func CreatePostHandler(c *gin.Context) {
 	// 1. get parameter
-	pc := new(models.Post)
+	pc := new(models.PostBasic)
 	if err := c.ShouldBindJSON(pc); err != nil {
 		ResponseErrorWithMsg(c, CodeInvalidParam, err.Error())
 	}
@@ -31,57 +30,10 @@ func CreatePostHandler(c *gin.Context) {
 }
 
 func GetPostDetailHandler(c *gin.Context) {
-	// get params
-	idStr := c.Param("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		zap.L().Error("GetPostDetailHandler: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
+	id := c.Param("id")
 	data, err := logic.GetPostDetailByID(id)
 	if err != nil {
 		zap.L().Error("logic.GetPostDetailByID: ", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-
-	ResponseSuccess(c, data)
-}
-
-// GetPostDetailListHandler will return a list of posts details,
-// if param "page" is empty, the page will be set to 1
-// if param size is empty, the size will be set to 2
-func GetPostDetailListHandler(c *gin.Context) {
-	targetPageNumberStr := c.Query("page")
-	pageSizeStr := c.Query("size")
-	if targetPageNumberStr == "" {
-		targetPageNumberStr = "1"
-	}
-	if pageSizeStr == "" {
-		pageSizeStr = "2"
-	}
-
-	var targetPageNumber int64
-	targetPageNumber, err := strconv.ParseInt(targetPageNumberStr, 10, 64)
-	if err != nil {
-		zap.L().Error("strconv.ParseInt: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
-	var pageSize int64
-	pageSize, err = strconv.ParseInt(pageSizeStr, 10, 64)
-	if err != nil {
-		zap.L().Error("strconv.ParseInt: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
-	data, err := logic.GetPostDetailList(targetPageNumber, pageSize)
-	if err != nil {
-		zap.L().Error("logic.GetPostDetailList: ", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
@@ -112,12 +64,15 @@ func PostVoteController(c *gin.Context) {
 	ResponseSuccess(c, nil)
 }
 
-// GetPostDetailListHandler2 is a updated version,
-// return posts list by time or by scores.
+// GetPostDetailListHandler return posts list
+// by time or by scores.
+// If community_id is not empty, it will return the
+// posts under the community, otherwise it will
+// return all the posts.
 // Example Usage:
-// api/v1/posts2?page=1&size=2&order=time
-// api/v1/posts2?page=1&size=2&order=scores
-func GetPostDetailListHandler2(c *gin.Context) {
+// api/v1/posts2?page=1&size=2&order=time&community_id=123456
+// api/v1/posts2?page=1&size=2&order=scores&community_id=0
+func GetPostDetailListHandler(c *gin.Context) {
 	p := &models.ParamsPostList{
 		Page:  1,
 		Size:  10,
@@ -129,34 +84,9 @@ func GetPostDetailListHandler2(c *gin.Context) {
 		return
 	}
 
-	postList, err := logic.GetPostDetailList2(p)
+	postList, err := logic.GetPostDetailList(p)
 	if err != nil {
-		zap.L().Error("logic.GetPostDetailList2: ", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
-		return
-	}
-	ResponseSuccess(c, postList)
-}
-
-// GetCommunityPostListHandler is similar to GetPostDetailListHandler2
-func GetCommunityPostListHandler(c *gin.Context) {
-	p := &models.ParamsCommunityPostList{
-		ParamsPostList: models.ParamsPostList{
-			Page:  1,
-			Size:  10,
-			Order: models.OrderTime,
-		},
-		CommunityID: 0,
-	}
-	if err := c.ShouldBindQuery(p); err != nil {
-		zap.L().Error("c.ShouldBindQuery: ", zap.Error(err))
-		ResponseError(c, CodeInvalidParam)
-		return
-	}
-
-	postList, err := logic.GetCommunityPostList(p)
-	if err != nil {
-		zap.L().Error("logic.GetCommunityPostList: ", zap.Error(err))
+		zap.L().Error("logic.GetAllPostDetail: ", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}

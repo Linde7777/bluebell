@@ -22,7 +22,7 @@ func GetPostIDsInOrder(p *models.ParamsPostList) ([]string, error) {
 }
 
 func GetCommunityPostIDsInOrder(
-	p *models.ParamsCommunityPostList) ([]string, error) {
+	p *models.ParamsPostList) ([]string, error) {
 
 	orderKey := getRedisKey(KeyPostTimeZSet)
 	if p.Order == models.OrderScore {

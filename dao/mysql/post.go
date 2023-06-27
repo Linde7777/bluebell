@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func InsertPost(pc *models.Post) error {
+func InsertPost(pc *models.PostBasic) error {
 	// sorry for the following long text, if I spilt it,
 	//the IDE will view it as error
 	sqlStr := "insert into post(post_id, title, content, author_id, community_id) values (?,?,?,?,?)"
@@ -15,28 +15,28 @@ func InsertPost(pc *models.Post) error {
 	return err
 }
 
-func GetPostDetailByID(id int64) (*models.Post, error) {
+func GetPostBasicByID(id int64) (*models.PostBasic, error) {
 	sqlStr := "select post_id,title,content,author_id," +
 		"community_id,create_time from post where post_id=?"
-	p := new(models.Post)
+	p := new(models.PostBasic)
 	err := db.Get(p, sqlStr, id)
 	return p, err
 }
 
-func GetPostDetailList(targetPageNumber, pageSize int64) (postList []*models.Post, err error) {
+func GetPostBasicList(targetPageNumber, pageSize int64) (postBasicList []*models.PostBasic, err error) {
 	sqlStr := "select post_id,title,content,author_id," +
 		"community_id,create_time from post order by create_time desc limit ?,? "
-	postList = make([]*models.Post, 0, 2)
+	postBasicList = make([]*models.PostBasic, 0, 2)
 
 	// in frontend, the initial page number is 1,
 	// in database, the index of post start at 0,
 	// that's why I write (targetPageNumber-1)*pageSize
-	err = db.Select(&postList, sqlStr, (targetPageNumber-1)*pageSize,
+	err = db.Select(&postBasicList, sqlStr, (targetPageNumber-1)*pageSize,
 		pageSize)
 	return
 }
 
-func GetPostDetailListByIDs(IDs []string) (postList []*models.Post, err error) {
+func GetPostBasicListByIDs(IDs []string) (postBasicList []*models.PostBasic, err error) {
 	sqlStr := "select post_id,title,content,author_id," +
 		"community_id,create_time from post where post_id in (?) " +
 		"order by FIND_IN_SET(post_id,?)"
@@ -46,6 +46,6 @@ func GetPostDetailListByIDs(IDs []string) (postList []*models.Post, err error) {
 	}
 
 	query = db.Rebind(query)
-	err = db.Select(&postList, query, args...)
+	err = db.Select(&postBasicList, query, args...)
 	return
 }

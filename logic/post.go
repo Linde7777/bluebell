@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func CreatePost(p *models.Post) error {
+func CreatePost(p *models.PostBasic) error {
 	p.ID = snowflake.GenID()
 	if err := mysql.InsertPost(p); err != nil {
 		return err
@@ -18,64 +18,6 @@ func CreatePost(p *models.Post) error {
 		return err
 	}
 	return nil
-}
-
-func GetPostDetailByID(id int64) (*models.ApiPostDetail, error) {
-	post, err := mysql.GetPostDetailByID(id)
-	if err != nil {
-		return nil, err
-	}
-
-	userData, err := mysql.GetUserByID(post.AuthorID)
-	if err != nil {
-		return nil, err
-	}
-
-	communityData, rowIsEmpty, err := mysql.GetCommunityDetail(post.CommunityID)
-	if rowIsEmpty && err == nil {
-		return nil, err
-	}
-
-	apd := new(models.ApiPostDetail)
-	apd.CommunityDetailSelected = communityData
-	apd.Post = post
-	apd.AuthorName = userData.Username
-
-	return apd, err
-}
-
-// GetPostDetailList return a list of posts,
-// start at targetPageNumber, with length pageSize
-func GetPostDetailList(targetPageNumber, pageSize int64) (postDetailList []*models.ApiPostDetail, err error) {
-	postList, err := mysql.GetPostDetailList(targetPageNumber, pageSize)
-	if err != nil {
-		return nil, err
-	}
-
-	postDetailList = make([]*models.ApiPostDetail, 0, len(postList))
-
-	for _, post := range postList {
-		userData, err := mysql.GetUserByID(post.AuthorID)
-		if err != nil {
-			zap.L().Error("mysql.GetUserByID: ", zap.Error(err))
-			continue
-		}
-
-		communityData, rowIsEmpty, err := mysql.GetCommunityDetail(post.CommunityID)
-		if rowIsEmpty && err == nil {
-			zap.L().Error("mysql.GetCommunityDetail: ", zap.Error(err))
-			continue
-		}
-
-		apd := new(models.ApiPostDetail)
-		apd.CommunityDetailSelected = communityData
-		apd.Post = post
-		apd.AuthorName = userData.Username
-
-		postDetailList = append(postDetailList, apd)
-	}
-
-	return
 }
 
 /*
@@ -108,7 +50,32 @@ func VoteForPost(userID int64, p *models.ParamsVoteData) error {
 		p.PostID, float64(p.Direction))
 }
 
-func GetPostDetailList2(p *models.ParamsPostList) (
+func GetPostDetailByID(id string) (
+	postDetail *models.ApiPostDetail, err error) {
+	IDs := make([]string, 0, 1)
+	IDs = append(IDs, id)
+
+	// since the length of IDs is 1, the length of
+	// the returned list is also 1
+	postDetailList, err := createPostDetailListByIDS(IDs)
+	if err != nil {
+		return nil, err
+	}
+	postDetail = postDetailList[0]
+
+	return
+}
+
+func GetPostDetailList(p *models.ParamsPostList) (
+	postDetailList []*models.ApiPostDetail, err error) {
+	if p.CommunityID == 0 {
+		return GetAllPostDetail(p)
+	} else {
+		return GetCommunityPostDetailList(p)
+	}
+}
+
+func GetAllPostDetail(p *models.ParamsPostList) (
 	postDetailList []*models.ApiPostDetail, err error) {
 
 	IDs, err := redis.GetPostIDsInOrder(p)
@@ -116,43 +83,10 @@ func GetPostDetailList2(p *models.ParamsPostList) (
 		return nil, err
 	}
 
-	postList, err := mysql.GetPostDetailListByIDs(IDs)
-	if err != nil {
-		return nil, err
-	}
-
-	votingData, err := redis.GetPostVotingData(IDs)
-	if err != nil {
-		return nil, err
-	}
-
-	postDetailList = make([]*models.ApiPostDetail, 0, len(postList))
-	for idx, post := range postList {
-		userData, err := mysql.GetUserByID(post.AuthorID)
-		if err != nil {
-			zap.L().Error("mysql.GetUserByID: ", zap.Error(err))
-			continue
-		}
-
-		communityData, rowIsEmpty, err := mysql.GetCommunityDetail(post.CommunityID)
-		if rowIsEmpty && err == nil {
-			zap.L().Error("mysql.GetCommunityDetail: ", zap.Error(err))
-			continue
-		}
-
-		apd := new(models.ApiPostDetail)
-		apd.CommunityDetailSelected = communityData
-		apd.Post = post
-		apd.AuthorName = userData.Username
-		apd.VoteCount = votingData[idx]
-
-		postDetailList = append(postDetailList, apd)
-	}
-
-	return
+	return createPostDetailListByIDS(IDs)
 }
 
-func GetCommunityPostList(p *models.ParamsCommunityPostList) (
+func GetCommunityPostDetailList(p *models.ParamsPostList) (
 	postDetailList []*models.ApiPostDetail, err error) {
 
 	IDs, err := redis.GetCommunityPostIDsInOrder(p)
@@ -160,7 +94,13 @@ func GetCommunityPostList(p *models.ParamsCommunityPostList) (
 		return nil, err
 	}
 
-	postList, err := mysql.GetPostDetailListByIDs(IDs)
+	return createPostDetailListByIDS(IDs)
+}
+
+func createPostDetailListByIDS(IDs []string) (
+	postDetailList []*models.ApiPostDetail, err error) {
+
+	postList, err := mysql.GetPostBasicListByIDs(IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +126,7 @@ func GetCommunityPostList(p *models.ParamsCommunityPostList) (
 
 		apd := new(models.ApiPostDetail)
 		apd.CommunityDetailSelected = communityData
-		apd.Post = post
+		apd.PostBasic = post
 		apd.AuthorName = userData.Username
 		apd.VoteCount = votingData[idx]
 

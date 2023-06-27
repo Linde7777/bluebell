@@ -2,9 +2,9 @@ package models
 
 import "time"
 
-// Post store the info that is needed
+// PostBasic store the info that is needed
 // to create a post
-type Post struct {
+type PostBasic struct {
 	// JavaScript can not store int64, need to convert ID to string
 	ID          int64     `json:"id,string" db:"post_id"`
 	AuthorID    int64     `json:"author_id" db:"author_id"`
@@ -20,7 +20,7 @@ type Post struct {
 type ApiPostDetail struct {
 	AuthorName string `json:"author_name"`
 	VoteCount  int64  `json:"vote_count"`
-	*Post
+	*PostBasic
 	*CommunityDetailSelected
 }
 
