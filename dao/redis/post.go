@@ -31,7 +31,7 @@ func GetCommunityPostIDsInOrder(
 
 	communityIDStr := strconv.Itoa(int(p.CommunityID))
 	communityKey := getRedisKey(KeyCommunityPostSetPrefix + communityIDStr)
-	cacheKey := orderKey + communityIDStr
+	cacheKey := orderKey + ":" + communityIDStr
 	if rdb.Exists(cacheKey).Val() < 1 {
 		pipeline := rdb.Pipeline()
 		pipeline.ZInterStore(cacheKey, redis.ZStore{
