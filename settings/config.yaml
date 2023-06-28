@@ -2,8 +2,8 @@ name: "bluebell"
 mode: "debug"
 port: 9091
 version: "v0.0.1"
-start_time: "2023-01-01"
-machine_id: 1
+start_time: "2023-01-01"  # be used by snowflake to generate ID
+machine_id: 1 # be used by snowflake to generate ID
 auth:
   access_token_expire_duration: 600000 # second
   refresh_token_expire_duration: 2592000 # second
