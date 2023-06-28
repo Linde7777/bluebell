@@ -1,5 +1,5 @@
 # bluebell
-The backend part of a online forum, imitating Reddit
+The backend of a online forum, imitating Reddit
 
 Controller -> Logic -> DAO
 
