@@ -3,6 +3,11 @@ WORKDIR /app
 COPY . /app
 RUN go mod download
 RUN go build -o main
-EXPOSE 6379 # Redis port, see setting/config.yaml
-EXPOSE 3306 # MySQL port, see setting/config.yaml
+
+# Redis port, see setting/config.yaml
+EXPOSE 6379
+
+# MySQL port, see setting/config.yaml
+EXPOSE 3306
+
 CMD ["./main"]
