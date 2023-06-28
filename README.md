@@ -7,7 +7,7 @@ The code are constructed in such layer: Controller -> Logic -> DAO
 1. Sign Up
 2. Login(with JWT token)
 3. Get all community in the forum
-4. Create a post under a community
+4. Create a post in a community
 5. Get post detail by its ID
 6. Get all the posts in the forum
 7. Get all the posts in a community
