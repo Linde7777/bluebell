@@ -1,0 +1,343 @@
+{
+	"info": {
+		"_postman_id": "c2db61e8-cd02-4e77-9b33-2e34714b6d28",
+		"name": "bluebell",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27673637"
+	},
+	"item": [
+		{
+			"name": "signUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"testuser\",\r\n  \"password\": \"123\",\r\n  \"re_password\": \"123\"\r\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/signup",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"testuser\",\r\n  \"password\": \"123\"\r\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCommunityList",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODg1MzkwNjAsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NjQyNjIwOTU1NDk1MDE0NDAsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.ozdt2DJSPWHCS-beqKf2fjg7CjSnG3qvL1Isn8mJTEU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/community",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"community"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createPost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODg0NTI2MDYsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NjQyNjIwOTU1NDk1MDE0NDAsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.n4EAMAqxx3mizcD-7a0kHg8aXB7p7-YgNr3kAfBwK_E",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"test Post 6\",\r\n  \"content\": \"test content 6\",\r\n  \"community_id\": 4\r\n}"
+				},
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/post",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPostDetailByID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODg0NTI2MDYsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NjQyNjIwOTU1NDk1MDE0NDAsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.n4EAMAqxx3mizcD-7a0kHg8aXB7p7-YgNr3kAfBwK_E",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/post/64263282814357504",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"post",
+						"64263282814357504"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllPostDetail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODgzNjAyNjcsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NTk1NTI5MzAyMDk5OTI3MDQsInVzZXJuYW1lIjoibG9uZ3BlbmcxMTEifQ.zuWge20QA2VqAClNz-njf0r_UVKEW-AqSY1YaFrI3Iw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/posts?page=1&size=2&order=score",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "2"
+						},
+						{
+							"key": "order",
+							"value": "score"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCommunityPost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODgzNjAyNjcsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NTk1NTI5MzAyMDk5OTI3MDQsInVzZXJuYW1lIjoibG9uZ3BlbmcxMTEifQ.zuWge20QA2VqAClNz-njf0r_UVKEW-AqSY1YaFrI3Iw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/community_post?page=1&size=3&order=score&community_id=3",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"community_post"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "3"
+						},
+						{
+							"key": "order",
+							"value": "score"
+						},
+						{
+							"key": "community_id",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getComunityListByID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODg0NTI2MDYsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NjQyNjIwOTU1NDk1MDE0NDAsInVzZXJuYW1lIjoidGVzdHVzZXIifQ.n4EAMAqxx3mizcD-7a0kHg8aXB7p7-YgNr3kAfBwK_E",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/community/2",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"community",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vote",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODgzNjAyNjcsImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NTk1NTI5MzAyMDk5OTI3MDQsInVzZXJuYW1lIjoibG9uZ3BlbmcxMTEifQ.zuWge20QA2VqAClNz-njf0r_UVKEW-AqSY1YaFrI3Iw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"post_id\": \"63912768243240960\",\r\n  \"direction\": \"-1\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "127.0.0.1:9091/api/v1/vote",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9091",
+					"path": [
+						"api",
+						"v1",
+						"vote"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODY5MDUzMzksImlzcyI6ImJsdWViZWxsIiwidXNlcl9pZCI6NTk1NTI5MzAyMDk5OTI3MDQsInVzZXJuYW1lIjoibG9uZ3BlbmcxMTEifQ.tMBTsFrybLGbsPSYWgrLHKed0dURsqaBXWB2n2lO7JQ"
+		}
+	]
+}
