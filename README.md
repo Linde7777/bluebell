@@ -16,7 +16,7 @@ The code are constructed in such layer: Controller -> Logic -> DAO
 ## Environment
 Go 1.20.4  
 Redis 7.0.11  
-MySQL 8.0
+MySQL 8.0.33
 
 ## Deployment
 1. Go to settings/config.yaml, modify the configuration as you need
