@@ -1,33 +1,28 @@
-FROM golang:1.20.4 AS build-stage
-WORKDIR /app
-COPY go.mod go.sum ./
+FROM golang:alpine AS builder
 
-RUN go env -w GO111MODULE=on
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
 
-# TODO: remove this if you are not in China
-RUN go env -w  GOPROXY=https://goproxy.cn,direct
+WORKDIR /build
 
+COPY go.mod .
+COPY go.sum .
 RUN go mod download
 
-COPY . ./
+COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /bluebell
+RUN go build -o bluebell_app .
 
-FROM build-stage AS run-test-stage
-RUN go test -v ./...
+FROM debian:stretch-slim
 
-FROM gcr.io/distroless/base-debian11 AS build-release-stage
+COPY ./settings /settings
 
-WORKDIR /
+COPY --from=builder /build/bluebell_app /
 
-COPY --from=build-stage /bluebell /bluebell
-
-# Redis port, see setting/config.yaml
+EXPOSE 9091
+EXPOSE 3306
 EXPOSE 6379
 
-# MySQL port, see setting/config.yaml
-EXPOSE 3306
-
-USER nonroot:nonroot
-
-CMD ["/bluebell"]
+ENTRYPOINT ["/bluebell_app", "conf/config.yaml"]
