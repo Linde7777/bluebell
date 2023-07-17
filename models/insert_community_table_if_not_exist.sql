@@ -1,3 +1,4 @@
+use bluebell;
 insert into community
 values ('1', '1', 'Go', 'Let\'s learn Golang', '2019-11-11 09:35:16', '2019-11-11 09:39:17');
 

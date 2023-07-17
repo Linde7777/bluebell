@@ -1,3 +1,4 @@
+use bluebell;
 create table if not exists community
 (
     id             int(11)                                 not null auto_increment,

@@ -1,3 +1,4 @@
+use bluebell;
 create table if not exists post
 (
     id           bigint(20)                               not null auto_increment,
@@ -15,4 +16,4 @@ create table if not exists post
     key idx_community_id (community_id)
 ) engine = InnoDB
   default charset = utf8mb4
-  collate = utf8mb4_general_ci
+  collate = utf8mb4_general_ci;
