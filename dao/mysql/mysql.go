@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"os"
+	"strings"
 )
 
 var db *sqlx.DB
@@ -74,7 +75,7 @@ func createDBAndTablesIfNotExist(username, password string, port int) error {
 	}
 	sqlFilePathPrefix := currWorkDir + "/" + sqlFilesFolderName + "/"
 	for _, sqlFile := range sqlFiles {
-		if err := execSql(sqlFilePathPrefix + sqlFile); err != nil {
+		if err := execSql(tempDB, sqlFilePathPrefix+sqlFile); err != nil {
 			zap.L().Error("execSql:", zap.Error(err))
 			return err
 		}
@@ -83,23 +84,30 @@ func createDBAndTablesIfNotExist(username, password string, port int) error {
 	return nil
 }
 
-func execSql(sqlFilePath string) error {
-	sqlStr, err := readSqlStr(sqlFilePath)
+func execSql(tempDB *sqlx.DB, sqlFilePath string) error {
+	rawContent, err := readString(sqlFilePath)
 	if err != nil {
 		zap.L().Error("fail to read sql string:", zap.Error(err))
 		return err
 	}
 
-	_, err = db.Exec(sqlStr)
-	if err != nil {
-		zap.L().Error("fail to exec sql string:", zap.Error(err))
-		return err
+	rawSqlStrSlice := strings.Split(rawContent, ";")
+
+	// remove the empty string
+	sqlStrSlice := rawSqlStrSlice[:len(rawSqlStrSlice)-1]
+
+	for _, sqlStr := range sqlStrSlice {
+		_, err = tempDB.Exec(sqlStr)
+		if err != nil {
+			zap.L().Error("fail to exec sql string:", zap.Error(err))
+			return err
+		}
 	}
 
 	return err
 }
 
-func readSqlStr(sqlFilePath string) (string, error) {
+func readString(sqlFilePath string) (string, error) {
 	bytes, err := os.ReadFile(sqlFilePath)
 	if err != nil {
 		return "", err
