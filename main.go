@@ -42,11 +42,6 @@ func main() {
 	}
 	defer mysql.Close()
 
-	if err := mysql.InitData(); err != nil {
-		fmt.Println("fail to init data ", err)
-		return
-	}
-
 	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
 		fmt.Println("fail to init redis: ", err)
 		return
