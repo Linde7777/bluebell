@@ -19,10 +19,23 @@ Redis 7.0.11
 MySQL 8.0.33
 
 ## Deployment
+### Local
 1. Go to settings/config.yaml, modify the configuration as you need
 2. `redis-server` (or `redis-server.exe` in Windows)
 3. `go build -o main`
 4. `./main`
+
+### Kubernetes
+```
+docker build -t longpeng1899/bluebell:1.0 .
+
+cd k8s/
+kubectl apply -f mysql-configmap.yaml
+kubectl apply -f mysql-secret.yaml
+kubectl apply -f mysql.yaml
+kubectl apply -f redis.yaml
+kubectl apply -f bluebell.yaml
+```
 
 ## Using
 I use [Postman](https://www.postman.com/) to test the code.  
