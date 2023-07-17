@@ -34,11 +34,41 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 	return
 }
 
-const sqlFilesDir = "../../models"
+var sqlsFilepath string
+
+const sqlFilesFolderName = "/models/"
+
+// InitData create database and tables from the SQL scripts
+// in bluebell/models if they do not exist.
+func InitData() (err error) {
+	currWorkingDir, err := os.Getwd()
+	if err != nil {
+		zap.L().Error("os.Getwd fail", zap.Error(err))
+	}
+	sqlsFilepath = currWorkingDir + sqlFilesFolderName
+
+	if err = createDBIfNotExist(); err != nil {
+		zap.L().Error("fail to create DB", zap.Error(err))
+		return
+	}
+
+	if err = createTablesIfNotExist(); err != nil {
+		zap.L().Error("fail to create tables", zap.Error(err))
+		return
+	}
+
+	if err = insertCommunityIfNotExist(); err != nil {
+		zap.L().Error("fail to insert community", zap.Error(err))
+		return
+	}
+
+	return
+}
+
 const createDBFilename = "create_db.sql"
 
-func CreateDBIfNotExist() error {
-	bytes, err := os.ReadFile(sqlFilesDir + createDBFilename)
+func createDBIfNotExist() error {
+	bytes, err := os.ReadFile(sqlsFilepath + createDBFilename)
 	if err != nil {
 		zap.L().Error("os.ReadFile failed: ", zap.Error(err))
 		return err
@@ -57,24 +87,26 @@ const createCommunityTableFilename = "create_community_table.sql"
 const createPostTableFilename = "create_post_table.sql"
 const createUserTableFilename = "create_user_tabel.sql"
 
-func CreateTablesIfNotExist() (err error) {
-	err = createTableIfNotExist(sqlFilesDir + createCommunityTableFilename)
+func createTablesIfNotExist() (err error) {
+	err = executeSqlScript(sqlsFilepath + createCommunityTableFilename)
 	if err != nil {
 		return
 	}
-	err = createTableIfNotExist(sqlFilesDir + createPostTableFilename)
+	err = executeSqlScript(sqlsFilepath + createPostTableFilename)
 	if err != nil {
 		return err
 	}
-	err = createTableIfNotExist(sqlFilesDir + createUserTableFilename)
+	err = executeSqlScript(sqlsFilepath + createUserTableFilename)
 	return err
 }
 
-func InsertCommunityIfNotExist() {
+const insertCommunityTabelFilename = "insert_community_table.sql"
 
+func insertCommunityIfNotExist() (err error) {
+	return executeSqlScript(sqlsFilepath + insertCommunityTabelFilename)
 }
 
-func createTableIfNotExist(filepath string) error {
+func executeSqlScript(filepath string) error {
 	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		zap.L().Error("os.ReadFile failed: ", zap.Error(err))
