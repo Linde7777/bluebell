@@ -4,8 +4,8 @@ COPY go.mod go.sum ./
 
 RUN export GO111MODULE=on
 
-# remove this if you are not in China
-# RUN export GOPROXY=https://goproxy.cn
+# TODO: remove this if you are not in China
+RUN export GOPROXY=https://goproxy.cn
 
 RUN go mod download
 
