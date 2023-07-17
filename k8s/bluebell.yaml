@@ -27,8 +27,10 @@ kind: Service
 metadata:
   name: bluebell-service
 spec:
+  type: LoadBalancer
   selector:
     app: bluebell
   ports:
   - port: 9091
     targetPort: 9091
+    nodePort: 30000
