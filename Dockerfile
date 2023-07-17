@@ -2,10 +2,10 @@ FROM golang:1.20.4 AS build-stage
 WORKDIR /app
 COPY go.mod go.sum ./
 
-RUN export GO111MODULE=on
+RUN go env -w GO111MODULE=on
 
 # TODO: remove this if you are not in China
-RUN export GOPROXY=https://goproxy.cn
+RUN go env -w  GOPROXY=https://goproxy.cn,direct
 
 RUN go mod download
 
