@@ -3,9 +3,9 @@ package mysql
 import (
 	"bluebell/settings"
 	"fmt"
-	"os"
-
 	"go.uber.org/zap"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/viper"
 
@@ -16,13 +16,17 @@ import (
 var db *sqlx.DB
 
 func Init(cfg *settings.MySQLConfig) (err error) {
+	if err = createDBAndTablesIfNotExist(); err != nil {
+		zap.L().Error("createDBAndTablesIfNotExist: ", zap.Error(err))
+		return err
+	}
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
 		cfg.Port,
-		cfg.DBName,
-	)
+		cfg.DBName)
 
 	if db, err = sqlx.Connect("mysql", dsn); err != nil {
 		zap.L().Error("sqlx.Connect failed: ", zap.Error(err))
@@ -34,96 +38,70 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 	return
 }
 
-var sqlsFilepath string
+func Close() {
+	if err := db.Close(); err != nil {
+		zap.L().Fatal("fail to close mysql", zap.Error(err))
+	}
+}
 
-const sqlFilesFolderName = "/models/"
+const sqlFilesFolderName = "models"
+const createDBIfNotExist = "create_db_if_not_exist.sql"
+const createCommunityTableIfNotExist = "create_community_table_if_not_exist.sql"
+const createPostTableIfNotExist = "create_post_table_if_not_exist.sql"
+const createUserTableIfNotExist = "create_user_table_if_not_exist.sql"
+const insertCommunityTableIfNotExist = "insert_community_table_if_not_exist"
 
-// InitData create database and tables from the SQL scripts
-// in bluebell/models if they do not exist.
-func InitData() (err error) {
-	currWorkingDir, err := os.Getwd()
+func createDBAndTablesIfNotExist() (err error) {
+	currWorkDir, err := os.Getwd()
 	if err != nil {
-		zap.L().Error("os.Getwd fail", zap.Error(err))
+		zap.L().Error("os.Getwd", zap.Error(err))
+		return err
 	}
-	sqlsFilepath = currWorkingDir + sqlFilesFolderName
+	sqlFilePath := currWorkDir + "/" + sqlFilesFolderName + "/"
 
-	if err = createDBIfNotExist(); err != nil {
-		zap.L().Error("fail to create DB", zap.Error(err))
-		return
-	}
-
-	if err = createTablesIfNotExist(); err != nil {
-		zap.L().Error("fail to create tables", zap.Error(err))
-		return
+	err = executeSqlInCMD(sqlFilePath + createDBIfNotExist)
+	if err != nil {
+		zap.L().Error("createDBIfNotExist", zap.Error(err))
+		return err
 	}
 
-	if err = insertCommunityIfNotExist(); err != nil {
-		zap.L().Error("fail to insert community", zap.Error(err))
-		return
+	err = executeSqlInCMD(sqlFilePath + createCommunityTableIfNotExist)
+	if err != nil {
+		zap.L().Error("createCommunityTableIfNotExist", zap.Error(err))
+		return err
+	}
+
+	err = executeSqlInCMD(sqlFilePath + createUserTableIfNotExist)
+	if err != nil {
+		zap.L().Error("createUserTableIfNotExist", zap.Error(err))
+		return err
+	}
+
+	err = executeSqlInCMD(sqlFilePath + createPostTableIfNotExist)
+	if err != nil {
+		zap.L().Error("createPostTableIfNotExist", zap.Error(err))
+		return err
+	}
+
+	err = executeSqlInCMD(sqlFilePath + insertCommunityTableIfNotExist)
+	if err != nil {
+		zap.L().Error("insertCommunityTableIfNotExist", zap.Error(err))
+		return err
 	}
 
 	return
 }
 
-const createDBFilename = "create_db.sql"
-
-func createDBIfNotExist() error {
-	bytes, err := os.ReadFile(sqlsFilepath + createDBFilename)
-	if err != nil {
-		zap.L().Error("os.ReadFile failed: ", zap.Error(err))
-		return err
-	}
-	script := string(bytes)
-	_, err = db.Exec(script)
-	if err != nil {
-		zap.L().Error("db.Exec failed: ", zap.Error(err))
-		return err
-	}
-
-	return err
-}
-
-const createCommunityTableFilename = "create_community_table.sql"
-const createPostTableFilename = "create_post_table.sql"
-const createUserTableFilename = "create_user_tabel.sql"
-
-func createTablesIfNotExist() (err error) {
-	err = executeSqlScript(sqlsFilepath + createCommunityTableFilename)
+func executeSqlInCMD(filepath string) (err error) {
+	bytes, err := os.ReadFile(filepath)
 	if err != nil {
 		return
 	}
-	err = executeSqlScript(sqlsFilepath + createPostTableFilename)
+	cmd := exec.Command(string(bytes))
+	_, err = cmd.Output()
 	if err != nil {
-		return err
-	}
-	err = executeSqlScript(sqlsFilepath + createUserTableFilename)
-	return err
-}
-
-const insertCommunityTabelFilename = "insert_community_table.sql"
-
-func insertCommunityIfNotExist() (err error) {
-	return executeSqlScript(sqlsFilepath + insertCommunityTabelFilename)
-}
-
-func executeSqlScript(filepath string) error {
-	bytes, err := os.ReadFile(filepath)
-	if err != nil {
-		zap.L().Error("os.ReadFile failed: ", zap.Error(err))
-		return err
-	}
-	script := string(bytes)
-	_, err = db.Exec(script)
-	if err != nil {
-		zap.L().Error("db.Exec failed: ", zap.Error(err))
-		return err
+		return
 	}
 
-	return err
-}
-
-func Close() {
-	if err := db.Close(); err != nil {
-		zap.L().Fatal("fail to close mysql", zap.Error(err))
-	}
+	return
 }
