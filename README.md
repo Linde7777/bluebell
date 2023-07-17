@@ -26,6 +26,7 @@ MySQL 8.0.33
 4. `./main`
 
 ### Kubernetes
+read the "TODO" in Dockerfile
 ```
 docker build -t longpeng1899/bluebell:1.0 .
 
