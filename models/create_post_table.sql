@@ -1,4 +1,4 @@
-create table post
+create table if not exists post
 (
     id           bigint(20)                               not null auto_increment,
     post_id      bigint(20)                               not null,
