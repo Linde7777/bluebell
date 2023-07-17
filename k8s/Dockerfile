@@ -1,12 +1,12 @@
 FROM golang:1.20.4
-WORKDIR /app
-COPY . /app
-
 RUN export GO111MODULE=on
 
 # remove this if you are not in China
 RUN export GOPROXY=https://goproxy.cn
 
+WORKDIR /app
+COPY go.mod .
+COPY go.sum .
 RUN go mod tidy
 RUN go build -o main
 
