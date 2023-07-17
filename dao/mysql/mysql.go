@@ -16,7 +16,7 @@ import (
 var db *sqlx.DB
 
 func Init(cfg *settings.MySQLConfig) (err error) {
-	if err = createDBAndTablesIfNotExist(); err != nil {
+	if err = createDBAndTablesIfNotExist(cfg.User, cfg.Password); err != nil {
 		zap.L().Error("createDBAndTablesIfNotExist: ", zap.Error(err))
 		return err
 	}
@@ -51,7 +51,14 @@ const createPostTableIfNotExist = "create_post_table_if_not_exist.sql"
 const createUserTableIfNotExist = "create_user_table_if_not_exist.sql"
 const insertCommunityTableIfNotExist = "insert_community_table_if_not_exist"
 
-func createDBAndTablesIfNotExist() (err error) {
+func createDBAndTablesIfNotExist(username, password string) (err error) {
+	cmd := exec.Command("mysql -u root -p")
+	_, err = cmd.Output()
+	if err != nil {
+		zap.L().Error("fail to login mysql", zap.Error(err))
+		return err
+	}
+
 	currWorkDir, err := os.Getwd()
 	if err != nil {
 		zap.L().Error("os.Getwd", zap.Error(err))
