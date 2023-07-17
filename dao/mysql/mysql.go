@@ -3,20 +3,17 @@ package mysql
 import (
 	"bluebell/settings"
 	"fmt"
-	"go.uber.org/zap"
-	"os"
-	"os/exec"
-
-	"github.com/spf13/viper"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+	"os"
 )
 
 var db *sqlx.DB
 
 func Init(cfg *settings.MySQLConfig) (err error) {
-	if err = createDBAndTablesIfNotExist(cfg.User, cfg.Password); err != nil {
+	if err = createDBAndTablesIfNotExist(cfg.User, cfg.Password, cfg.Port); err != nil {
 		zap.L().Error("createDBAndTablesIfNotExist: ", zap.Error(err))
 		return err
 	}
@@ -45,70 +42,67 @@ func Close() {
 }
 
 const sqlFilesFolderName = "models"
-const createDBIfNotExist = "create_db_if_not_exist.sql"
-const createCommunityTableIfNotExist = "create_community_table_if_not_exist.sql"
-const createPostTableIfNotExist = "create_post_table_if_not_exist.sql"
-const createUserTableIfNotExist = "create_user_table_if_not_exist.sql"
-const insertCommunityTableIfNotExist = "insert_community_table_if_not_exist"
+const (
+	createDBIfNotExist             = "create_db_if_not_exist.sql"
+	createCommunityTableIfNotExist = "create_community_table_if_not_exist.sql"
+	createPostTableIfNotExist      = "create_post_table_if_not_exist.sql"
+	createUserTableIfNotExist      = "create_user_table_if_not_exist.sql"
+	insertCommunityTableIfNotExist = "insert_community_table_if_not_exist.sql"
+)
 
-func createDBAndTablesIfNotExist(username, password string) (err error) {
-	cmd := exec.Command("mysql -u root -p")
-	_, err = cmd.Output()
+func createDBAndTablesIfNotExist(username, password string, port int) error {
+	connectionString := fmt.Sprintf("%s:%s@tcp(localhost:%d)/", username, password, port)
+	tempDB, err := sqlx.Connect("mysql", connectionString)
 	if err != nil {
-		zap.L().Error("fail to login mysql", zap.Error(err))
+		zap.L().Error("Failed to connect to MySQL", zap.Error(err))
 		return err
 	}
+	defer tempDB.Close()
 
 	currWorkDir, err := os.Getwd()
 	if err != nil {
 		zap.L().Error("os.Getwd", zap.Error(err))
 		return err
 	}
-	sqlFilePath := currWorkDir + "/" + sqlFilesFolderName + "/"
 
-	err = executeSqlInCMD(sqlFilePath + createDBIfNotExist)
-	if err != nil {
-		zap.L().Error("createDBIfNotExist", zap.Error(err))
-		return err
+	var sqlFiles = []string{
+		createDBIfNotExist,
+		createCommunityTableIfNotExist,
+		createPostTableIfNotExist,
+		createUserTableIfNotExist,
+		insertCommunityTableIfNotExist,
+	}
+	sqlFilePathPrefix := currWorkDir + "/" + sqlFilesFolderName + "/"
+	for _, sqlFile := range sqlFiles {
+		if err := execSql(sqlFilePathPrefix + sqlFile); err != nil {
+			zap.L().Error("execSql:", zap.Error(err))
+			return err
+		}
 	}
 
-	err = executeSqlInCMD(sqlFilePath + createCommunityTableIfNotExist)
-	if err != nil {
-		zap.L().Error("createCommunityTableIfNotExist", zap.Error(err))
-		return err
-	}
-
-	err = executeSqlInCMD(sqlFilePath + createUserTableIfNotExist)
-	if err != nil {
-		zap.L().Error("createUserTableIfNotExist", zap.Error(err))
-		return err
-	}
-
-	err = executeSqlInCMD(sqlFilePath + createPostTableIfNotExist)
-	if err != nil {
-		zap.L().Error("createPostTableIfNotExist", zap.Error(err))
-		return err
-	}
-
-	err = executeSqlInCMD(sqlFilePath + insertCommunityTableIfNotExist)
-	if err != nil {
-		zap.L().Error("insertCommunityTableIfNotExist", zap.Error(err))
-		return err
-	}
-
-	return
+	return nil
 }
 
-func executeSqlInCMD(filepath string) (err error) {
-	bytes, err := os.ReadFile(filepath)
+func execSql(sqlFilePath string) error {
+	sqlStr, err := readSqlStr(sqlFilePath)
 	if err != nil {
-		return
-	}
-	cmd := exec.Command(string(bytes))
-	_, err = cmd.Output()
-	if err != nil {
-		return
+		zap.L().Error("fail to read sql string:", zap.Error(err))
+		return err
 	}
 
-	return
+	_, err = db.Exec(sqlStr)
+	if err != nil {
+		zap.L().Error("fail to exec sql string:", zap.Error(err))
+		return err
+	}
+
+	return err
+}
+
+func readSqlStr(sqlFilePath string) (string, error) {
+	bytes, err := os.ReadFile(sqlFilePath)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
 }
