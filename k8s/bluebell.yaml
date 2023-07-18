@@ -14,6 +14,9 @@ spec:
       containers:
       - name: bluebell
         image: longpeng1899/bluebell:1.0.0
+        volumeMounts:
+        - name: config-volumne
+          mountPath: /settings
         resources:
           limits:
             memory: "128Mi"
