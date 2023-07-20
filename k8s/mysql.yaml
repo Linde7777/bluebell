@@ -1,39 +1,27 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mysql-deployment
-  labels:
-    app: mysql
-spec:
-  replicas: 1
-  selector:
+apiVersion: apps/v1                 #版本
+kind: Deployment                    #创建资源的类型
+metadata:                           #资源的元数据
+  name: mysql                 #资源的名称，是元数据必填项
+spec:                               #期望状态
+  replicas: 1                       #创建的副本数量（pod数量），不填默认为1
+  selector:                         #
     matchLabels:
       app: mysql
-  template:
-    metadata:
-      labels:
-        app: mysql
-    spec:
-      containers:
-      - name: mysql
-        image: mysql:8.0.33
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
+  template:                         #定义pod的模板
+    metadata:                       #pod的元数据
+      labels:                       #labels标签，必填一个
+        app: mysql             
+    spec:                           #pod的期望状态
+      containers:                   #容器
+      - name: mysql                 #容器名称
+        image: mysql:5.7            #镜像
+        imagePullPolicy: IfNotPresent
+        ports:                      #容器的端口
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
-          valueFrom: 
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-root-password
-        - name: MYSQL_DATABASE
-          valueFrom:
-            configMapKeyRef:
-              name: mysql-configmap
-              key: db-name
+          value: "root"
+
 
 ---
 apiVersion: v1
@@ -47,3 +35,30 @@ spec:
   - port: 3306
     targetPort: 3306
     protocol: TCP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce # 卷可以被一个节点以读写方式挂载
+  hostPath:
+    path: "/mnt/mysql"
