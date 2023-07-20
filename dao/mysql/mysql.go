@@ -14,7 +14,7 @@ import (
 var db *sqlx.DB
 
 func Init(cfg *settings.MySQLConfig) (err error) {
-	if err = createDBAndTablesIfNotExist(cfg.User, cfg.Password, cfg.Port); err != nil {
+	if err = createDBAndTablesIfNotExist(cfg.User, cfg.Password, cfg.Host, cfg.Port); err != nil {
 		zap.L().Error("createDBAndTablesIfNotExist: ", zap.Error(err))
 		return err
 	}
@@ -51,8 +51,8 @@ const (
 	insertCommunityTableIfNotExist = "insert_community_table_if_not_exist.sql"
 )
 
-func createDBAndTablesIfNotExist(username, password string, port int) error {
-	connectionString := fmt.Sprintf("%s:%s@tcp(localhost:%d)/", username, password, port)
+func createDBAndTablesIfNotExist(username, password, host string, port int) error {
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%d)/", username, password, host, port)
 	tempDB, err := sqlx.Connect("mysql", connectionString)
 	if err != nil {
 		zap.L().Error("Failed to connect to MySQL", zap.Error(err))
