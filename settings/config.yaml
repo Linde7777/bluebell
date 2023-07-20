@@ -14,7 +14,7 @@ log:
   max_age: 30
   max_backups: 7
 mysql:
-  host: "10.244.0.22"
+  host: "mysql-service"
   port: 3306
   user: "root"
   password: "1234"
@@ -22,7 +22,7 @@ mysql:
   max_conns: 200
   idle_conns: 50
 redis:
-  host: "10.244.0.20"
+  host: "redis-service"
   port: 6379
   db: 0
   password: ""
