@@ -14,15 +14,15 @@ log:
   max_age: 30
   max_backups: 7
 mysql:
-  host: 192.168.126.135
+  host: 192.168.49.2
   port: 30959
   user: "root"
-  password: "1234"
+  password: "root"
   dbname: "bluebell"
   max_conns: 200
   idle_conns: 50
 redis:
-  host: 192.168.126.135
+  host: 192.168.49.2
   port: 31680
   db: 0
   password: ""
