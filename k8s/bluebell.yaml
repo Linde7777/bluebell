@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: bluebell
-        image: longpeng1899/bluebell:1.0.0
+        image: longpeng1899/bluebell:3.0.0
         resources:
           limits:
             memory: "128Mi"
