@@ -25,21 +25,6 @@ MySQL 8.0.33
 3. `go build -o main`
 4. `./main`
 
-### Kubernetes
-TODO: still got some problem  
-
-read the "TODO" in Dockerfile
-```
-docker build -t longpeng1899/bluebell:1.0 .
-
-cd k8s/
-kubectl apply -f mysql-configmap.yaml
-kubectl apply -f mysql-secret.yaml
-kubectl apply -f mysql.yaml
-kubectl apply -f redis.yaml
-kubectl apply -f bluebell.yaml
-```
-
 ## Using
 I use [Postman](https://www.postman.com/) to test the code.  
 1. In Postman, import the collection from `postman_json_template/bluebell.postman_collection.json`,
