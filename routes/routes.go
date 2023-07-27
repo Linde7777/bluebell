@@ -4,6 +4,7 @@ import (
 	"bluebell/controller"
 	"bluebell/logger"
 	"bluebell/middlewares"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -28,5 +29,7 @@ func SetUp(mode string) (engine *gin.Engine) {
 		v1.GET("/posts", controller.GetPostDetailListHandler)
 		v1.POST("/vote", controller.PostVoteController)
 	}
+
+	pprof.Register(r)
 	return r
 }
