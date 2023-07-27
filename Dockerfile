@@ -25,4 +25,4 @@ EXPOSE 9091
 EXPOSE 3306
 EXPOSE 6379
 
-ENTRYPOINT ["/bluebell_app", "conf/config.yaml"]
+ENTRYPOINT ["/bluebell_app", "/settings/config.yaml"]
