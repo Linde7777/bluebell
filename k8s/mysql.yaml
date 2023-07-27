@@ -14,7 +14,7 @@ spec:                               #期望状态
     spec:                           #pod的期望状态
       containers:                   #容器
       - name: mysql                 #容器名称
-        image: mysql:5.7            #镜像
+        image: mysql:8.0.33            #镜像
         imagePullPolicy: IfNotPresent
         ports:                      #容器的端口
         - containerPort: 3306
