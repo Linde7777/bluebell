@@ -38,7 +38,4 @@ so put the token inside your request
 ![Example Image](readme_pictures/send_request_with_token.png)
 
 ## Todo
-1. In voting part, if the insertion into MySQL is successful but the insertion 
-into Redis fails, the MySQL insertion should be rolled back.
-
-2. Use refresh-token to get access-token
+1. Use refresh-token to get access-token
